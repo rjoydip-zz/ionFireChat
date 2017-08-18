@@ -4,8 +4,9 @@
     angular
         .module('services', [])
         .factory("Auth", Auth)
-        .factory("Message", Message)
         .factory("Users", Users)
+        .factory("Rooms", Rooms)
+        .factory("Message", Message)
         .service("UserService", UserService)
         .service("FacebookService", FacebookService);
 
@@ -57,6 +58,29 @@
         }
     }
 
+    Users.$inject = ["$firebaseArray", "firebase", "UserService"];
+
+    function Rooms($firebaseArray, firebase, UserService) {
+        var currentUser = UserService.getProfile();
+        var ref = firebase.database().ref();
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0,
+                v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+
+        return {
+            create: function(addUserinfo) {
+                ref.child('rooms').child(uuid).set({
+                    message: null,
+                    myId: currentUser.id,
+                    friendId: addUserinfo.id,
+                });
+                UserService.addToFriendList(addUserinfo.id);
+            }
+        }
+    }
+
     Users.$inject = ["$firebaseArray", "firebase"];
 
     function Users($firebaseArray, firebase) {
@@ -73,6 +97,8 @@
 
     function UserService(Auth, $q, $state, $ionicLoading, $rootScope, firebase, $firebaseArray) {
         var ref = firebase.database().ref();
+        // Get a reference to my own presence status.
+        var connectedRef = ref.child('/.info/connected');
 
         return {
             login: login,
@@ -81,13 +107,12 @@
             saveProfile: saveProfile,
             getProfile: getProfile,
             trackPresence: trackPresence,
+            addToFriendList: addToFriendList,
             getUserProfileById: getUserProfileById
         }
 
         function trackPresence() {
             var currentUser = this.getProfile();
-            // Get a reference to my own presence status.
-            var connectedRef = ref.child('/.info/connected');
             // Get a reference to the presence data in Firebase.
             var myConnectionsRef = ref.child('/users/' + currentUser.id + '/connected');
             connectedRef.on('value', function(isOnline) {
@@ -99,6 +124,12 @@
             });
         }
 
+        function addToFriendList(friendId) {
+            connectedRef.on('value', function(snapshort) {
+                var sval = snapshort.val();
+                sval['friends'].push(friendId);
+            });
+        }
 
         function createUser(user) {
             var deferred = $q.defer();
@@ -110,7 +141,8 @@
                 ref.child("users").child(userData.uid).set({
                     id: userData.uid,
                     email: user.email,
-                    username: user.username
+                    friends: null,
+                    username: user.username,
                 });
                 $ionicLoading.hide();
                 login.call(self, user);

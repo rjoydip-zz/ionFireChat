@@ -48,8 +48,8 @@ angular.module('routes', [])
         url: '/chats',
         views: {
             'tab-chats': {
-                templateUrl: 'templates/tab-chats.html',
-                controller: 'ChatsCtrl'
+                templateUrl: 'templates/tab-friends.html',
+                controller: 'FriendsCtrl'
             }
         }
     })

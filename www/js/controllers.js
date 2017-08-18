@@ -4,9 +4,9 @@
     angular
         .module('controllers', [])
         .controller("ChatCtrl", ChatCtrl)
-        .controller("ChatsCtrl", ChatsCtrl)
         .controller("LoginCtrl", LoginCtrl)
         .controller("UsersCtrl", UsersCtrl)
+        .controller("FriendsCtrl", FriendsCtrl)
         .controller("SettingCtrl", SettingCtrl);
 
     LoginCtrl.$inject = ["$scope", "$ionicModal", "$state", "$firebaseAuth", "$ionicLoading", "$rootScope", "CONFIG", "UserService", "FacebookService"];
@@ -55,31 +55,35 @@
         console.log("Login controller loading...");
     }
 
-    ChatsCtrl.$inject = ['$scope', "$state", "Users"];
+    FriendsCtrl.$inject = ['$scope', "$state", "Users"];
 
-    function ChatsCtrl($scope, $state, Users) {
+    function FriendsCtrl($scope, $state, Users) {
         var vm = $scope.vm = {};
 
         angular.extend(vm, {});
         console.log("Chats controller loading...");
     }
 
-    UsersCtrl.$inject = ['$scope', "$state", "$timeout", "$ionicLoading", "Users"];
+    UsersCtrl.$inject = ['$scope', "$state", "$timeout", "$ionicLoading", "Users", "UserService", "Rooms"];
 
-    function UsersCtrl($scope, $state, $timeout, $ionicLoading, Users) {
+    function UsersCtrl($scope, $state, $timeout, $ionicLoading, Users, UserService, Rooms) {
         var vm = $scope.vm = {};
 
         $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
             angular.extend(vm, {
                 openChat: openChat,
                 refresh: refresh,
-                users: Users.getAllUsers()
+                addFriend: addFriend,
+                users: Users.getAllUsers(),
+                currentUser: UserService.getProfile()
             });
         });
 
-        $scope.$on('$ionicView.afterEnter', function(event, viewData) {
+        $scope.$on('$ionicView.afterEnter', function(event, viewData) {});
 
-        });
+        function addFriend(addUserinfo) {
+            Rooms.create(addUserinfo);
+        }
 
         function refresh() {
             vm.users = Users.getAllUsers();
@@ -90,7 +94,7 @@
         }
 
         function openChat(id) {
-            $state.go('chat', { id: id });
+            // $state.go('chat', { id: id });
         }
 
         console.log("Users controller loading...");
@@ -124,9 +128,11 @@
         function remove(chat) {
             Message.remove(chat);
         }
-        UserService.getUserProfileById($state.params.id, function(data) {
-            vm.user = data;
-        });
+
+        // UserService.getUserProfileById($state.params.id, function(data) {
+        //     vm.user = data;
+        // });
+
         console.log("Chat controller loading...");
     }
 

@@ -1,19 +1,15 @@
-<ion-view view-title="Users">
+<ion-view view-title="Friends">
     <ion-nav-buttons side="right">
         <user-logout></user-logout>
     </ion-nav-buttons>
     <ion-content>
-        <ion-list>
-            <ion-item ng-repeat="user in vm.users">
-                <div class="user-snip" ng-click="vm.openChat(user.id)">
-                    <img src="img/no_user.png">
-                    <div class="user-derails">
-                        <h2><b>{{user.username}}</b></h2>
-                    </div>
-                </div>
-            </ion-item>
-        </ion-list>
-
+        <div class="row user-snip" ng-repeat="user in vm.users" ng-if="user.id !== currentUser.id">
+            <div class="col img col-20"><img height="40" src="img/no_user.png"></div>
+            <div class="col name col-55">
+                <b>{{user.username}}</b>
+            </div>
+            <div class="col add col-25"><button type="button" ng-click="vm.addFriend(user)" class="button button-small button-assertive">Add Friend</button></div>
+        </div>
         <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
     </ion-content>
 </ion-view>
@@ -24,20 +20,16 @@
         display: inline-flex;
     }
     
-    .user-snip>img {
+    .user-snip .img>img {
         border-radius: 50%;
-        overflow: hidden;
-        width: 36px;
-        height: 36px;
+        border: 1px solid #292222;
     }
     
-    .user-snip>div {
-        margin-top: 6px;
-        padding-left: 5%;
+    .user-snip .name {
+        margin-top: 10px;
     }
     
-    .bar .back-button.hide,
-    .bar .buttons .hide {
-        display: none;
+    .user-snip .add {
+        margin-top: 5px;
     }
 </style>
