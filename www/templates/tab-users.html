@@ -1,0 +1,43 @@
+<ion-view view-title="Users">
+    <ion-nav-buttons side="right">
+        <user-logout></user-logout>
+    </ion-nav-buttons>
+    <ion-content>
+        <ion-list>
+            <ion-item ng-repeat="user in vm.users">
+                <div class="user-snip" ng-click="vm.openChat(user.id)">
+                    <img src="img/no_user.png">
+                    <div class="user-derails">
+                        <h2><b>{{user.username}}</b></h2>
+                    </div>
+                </div>
+            </ion-item>
+        </ion-list>
+
+        <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
+    </ion-content>
+</ion-view>
+
+<style>
+    .user-snip {
+        width: 100%;
+        display: inline-flex;
+    }
+    
+    .user-snip>img {
+        border-radius: 50%;
+        overflow: hidden;
+        width: 36px;
+        height: 36px;
+    }
+    
+    .user-snip>div {
+        margin-top: 6px;
+        padding-left: 5%;
+    }
+    
+    .bar .back-button.hide,
+    .bar .buttons .hide {
+        display: none;
+    }
+</style>

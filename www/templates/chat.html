@@ -1,0 +1,42 @@
+<ion-view view-title="{{vm.user.username}}">
+    <ion-nav-buttons side="right">
+        <user-logout></user-logout>
+    </ion-nav-buttons>
+    <ion-header-bar class="bar bar-header bar-assertive">
+        <ion-nav-buttons side="left">
+            <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+        </ion-nav-buttons>
+    </ion-header-bar>
+    <ion-content has-subheader="false" delegate-handle="chatScroll">
+        <div class="chat-content">
+            <div class="chat-msg-items">
+                <div class="chat-item" ng-repeat="message in vm.messages track by $index" ng-class="{true: 'me', false: 'you'}[message.sender_email == vm.currentUser.email ]">
+                    <!-- <div class="time">11: 20</div> -->
+                    <div class="user-info">
+                        <a href="javascript:;" class="avatar">
+                            <img ng-src="img/no_user.png" width="100%">
+                        </a>
+                        <p class="name">{{ message.sender_username }}</p>
+                    </div>
+                    <div class="msg-panel">
+                        <div class="msg-text">
+                            {{ message.content }}
+                        </div>
+                        <div class="triangle-arrow"></div>
+                        <div class="triangle-arrow2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+    <ion-footer-bar keyboard-attach>
+        <form name="chatForm">
+            <div class="chat-input">
+                <div class="input-area">
+                    <input type="text" ng-model="vm.newMessage" placeholder="Type in your message..." required>
+                    <button class="send-msg-btn button " ng-disabled="!chatForm.$valid" ng-click="vm.sendMessage(vm.newMessage)"> Send </button>
+                </div>
+            </div>
+        </form>
+    </ion-footer-bar>
+</ion-view>
