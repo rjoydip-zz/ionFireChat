@@ -98,9 +98,9 @@
         console.log("Friends controller loading...");
     }
 
-    UsersCtrl.$inject = ['$scope', "$timeout", "Users", "UserService", "Rooms"];
+    UsersCtrl.$inject = ['$scope', "$timeout", "UserService", "Rooms"];
 
-    function UsersCtrl($scope, $timeout, Users, UserService, Rooms) {
+    function UsersCtrl($scope, $timeout, UserService, Rooms) {
         var vm = $scope.vm = {};
 
         angular.extend(vm, {
@@ -111,7 +111,7 @@
         });
 
         $scope.$on('$ionicView.afterEnter', function() {
-            vm.users = Users.getUsers();
+            vm.users = UserService.getUsers();
         });
 
         function addFriend(addUserinfo) {
@@ -124,7 +124,7 @@
 
         function refresh() {
             $timeout(function() {
-                vm.users = Users.getUsers();
+                vm.users = UserService.getUsers();
                 $scope.$broadcast('scroll.refreshComplete');
             }, 1000);
         }
@@ -176,12 +176,14 @@
         console.log("Chat controller loading...");
     }
 
-    SettingCtrl.$inject = ['$scope', "$state"];
+    SettingCtrl.$inject = ['$scope', "$state", "UserService"];
 
-    function SettingCtrl($scope, $state) {
+    function SettingCtrl($scope, $state, UserService) {
         var vm = $scope.vm = {};
 
-        angular.extend(vm, {});
+        angular.extend(vm, {
+            user: UserService.getProfile()
+        });
         console.log("Settings controller loading...");
     }
 

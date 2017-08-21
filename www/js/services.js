@@ -4,7 +4,6 @@
     angular
         .module('services', [])
         .factory("Auth", Auth)
-        .factory("Users", Users)
         .factory("Rooms", Rooms)
         .factory("Message", Message)
         .service("UserService", UserService)
@@ -53,7 +52,7 @@
         }
     }
 
-    Users.$inject = ["$firebaseArray", "firebase", "UserService"];
+    Rooms.$inject = ["$firebaseArray", "firebase", "UserService"];
 
     function Rooms($firebaseArray, firebase, UserService) {
         var currentUser = UserService.getProfile();
@@ -94,16 +93,6 @@
         }
     }
 
-    Users.$inject = ["$firebaseArray", "firebase", "UserService"];
-
-    function Users($firebaseArray, firebase, UserService) {
-        return {
-            getUsers: function() {
-                return $firebaseArray(firebase.database().ref().child('users'));
-            }
-        }
-    }
-
     UserService.$inject = ["Auth", "$q", "$state", "$ionicLoading", "$rootScope", "firebase", "$firebaseArray"];
 
     function UserService(Auth, $q, $state, $ionicLoading, $rootScope, firebase, $firebaseArray) {
@@ -114,6 +103,7 @@
         return {
             login: login,
             logout: logout,
+            getUsers: getUsers,
             createUser: createUser,
             saveProfile: saveProfile,
             getProfile: getProfile,
@@ -217,6 +207,10 @@
             ref.child('/users/' + id).once('value', function(snapshot) {
                 callback(snapshot.val());
             });
+        }
+
+        function getUsers() {
+            return $firebaseArray(firebase.database().ref().child('users'));
         }
 
         function getAllMyFriends(callback) {
