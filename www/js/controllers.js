@@ -78,6 +78,7 @@
                 ids.forEach(function(id) {
                     UserService.getUserProfileById(id, function(data) {
                         vm.users.push(data);
+                        $scope.$apply();
                     });
                 });
             });
