@@ -70,13 +70,17 @@
         });
 
         return {
-            create: function(addUserinfo) {
+            create: function(addUserinfo, callback) {
                 ref.child('rooms').child(uuid).set({
                     message: null,
                     myId: currentUser.id,
                     friendId: addUserinfo.id,
                 });
-                UserService.addToFriendList(addUserinfo.id);
+                UserService.addToFriendList(addUserinfo.id, function(status) {
+                    if (status) {
+                        callback(status);
+                    }
+                });
             }
         }
     }
@@ -124,11 +128,28 @@
             });
         }
 
-        function addToFriendList(friendId) {
-            connectedRef.on('value', function(snapshort) {
-                var sval = snapshort.val();
-                sval['friends'].push(friendId);
+        function addToFriendList(friendId, callback) {
+            var currentUser = this.getProfile();
+            var newDataSet = {},
+                newFriendList = [];
+
+            // Get a reference to the presence data in Firebase.
+            ref.child('/users/' + currentUser.id).on('value', function(snapshot) {
+                newDataSet = snapshot.val();
+                snapshot.forEach(function(data) {
+                    if (data.key === 'friends') {
+                        newFriendList = data.val();
+                        newFriendList.push(friendId);
+                        newDataSet['friends'] = newFriendList;
+                        console.log(newFriendList);
+                    }
+                });
+                return;
             });
+            ref.child('/users/' + currentUser.id).set(newDataSet);
+            if (callback) {
+                callback(true);
+            }
         }
 
         function createUser(user) {
@@ -141,7 +162,7 @@
                 ref.child("users").child(userData.uid).set({
                     id: userData.uid,
                     email: user.email,
-                    friends: null,
+                    friends: [userData.uid],
                     username: user.username,
                 });
                 $ionicLoading.hide();

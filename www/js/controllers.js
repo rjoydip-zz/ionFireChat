@@ -82,7 +82,9 @@
         $scope.$on('$ionicView.afterEnter', function(event, viewData) {});
 
         function addFriend(addUserinfo) {
-            Rooms.create(addUserinfo);
+            Rooms.create(addUserinfo, function(status) {
+                console.log("Room create status", status);
+            });
         }
 
         function refresh() {
