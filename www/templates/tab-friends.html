@@ -3,7 +3,7 @@
         <user-logout></user-logout>
     </ion-nav-buttons>
     <ion-content>
-        <div class="row user-snip" ng-click="vm.openChat(user)" ng-init="nosUser" ng-repeat="user in vm.users">
+        <div class="row user-snip" ng-click="vm.openChat(user)" ng-init="nosUser" ng-repeat="user in vm.users" ng-if="(user.id !== currentUser.id)">
             <div class="col img col-20" ng-click="alert();"><img height="40" src="img/no_user.png"></div>
             <div class="col name col-80">
                 <b>{{user.username}}</b>

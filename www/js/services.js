@@ -24,19 +24,14 @@
         var ref = firebase.database().ref();
 
         return {
-            get: get,
-            remove: remove,
-            send: send
+            send: send,
+            getMessages: getMessages
         }
 
-        function get(roomId) {
-            chatMessagesForRoom = $firebaseArray(ref.child('messages').child(roomId).orderByChild("createdAt"));
-            return chatMessagesForRoom;
-        }
-
-        function remove(chat) {
-            chatMessagesForRoom.$remove(chat).then(function(ref) {
-                ref.key() === chat.$id; // true item has been removed
+        function getMessages(roomId, callback) {
+            chatMessagesForRoom = $firebaseArray(ref.child('/rooms/' + roomId + '/messages'));
+            ref.child('/rooms/' + roomId + '/messages').once('value', function(snaphot) {
+                callback(snaphot.val());
             });
         }
 
@@ -72,7 +67,7 @@
         return {
             create: function(addUserinfo, callback) {
                 ref.child('rooms').child(uuid).set({
-                    message: null,
+                    messages: ['Welcome'],
                     myId: currentUser.id,
                     friendId: addUserinfo.id,
                 });
@@ -81,6 +76,20 @@
                         callback(status);
                     }
                 });
+            },
+            getRoomId: function(friendId, callback) {
+                var currentUser = UserService.getProfile();
+                var roomId = null;
+
+                ref.child('rooms').once('value', function(snapshot) {
+                    snapshot.forEach(function(item) {
+                        if (item.val().friendId === friendId && item.val().myId === currentUser.id) {
+                            callback(item.key);
+                            return;
+                        }
+                    });
+                });
+
             }
         }
     }

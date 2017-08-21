@@ -82,7 +82,6 @@
                     });
                 });
             });
-
         };
 
         function openChat(user) {
@@ -107,8 +106,12 @@
         angular.extend(vm, {
             refresh: refresh,
             addFriend: addFriend,
-            users: Users.getUsers(),
+            users: null,
             currentUser: UserService.getProfile()
+        });
+
+        $scope.$on('$ionicView.afterEnter', function() {
+            vm.users = Users.getUsers();
         });
 
         function addFriend(addUserinfo) {
@@ -120,9 +123,8 @@
         }
 
         function refresh() {
-            vm.users = Users.getUsers();
-
             $timeout(function() {
+                vm.users = Users.getUsers();
                 $scope.$broadcast('scroll.refreshComplete');
             }, 1000);
         }
@@ -130,9 +132,9 @@
         console.log("Users controller loading...");
     }
 
-    ChatCtrl.$inject = ['$scope', '$state', 'Message', "UserService"];
+    ChatCtrl.$inject = ['$scope', '$state', '$ionicScrollDelegate', 'Message', "UserService", "Rooms"];
 
-    function ChatCtrl($scope, $state, Message, UserService) {
+    function ChatCtrl($scope, $state, $ionicScrollDelegate, Message, UserService, Rooms) {
         var vm = $scope.vm = {};
 
         // back button enable on this page
@@ -143,19 +145,24 @@
         angular.extend(vm, {
             user: null,
             newMessage: "",
-            sendMessage: sendMessage,
-            remove: remove,
-            chatUser: chatUser
+            messages: [],
+            chatUser: chatUser,
+            sendMessage: sendMessage
         });
 
         $scope.$on('$ionicView.afterEnter', function() {
             vm.chatUser();
+            Rooms.getRoomId($state.params.id, function(roomId) {
+                console.log("Room Id", roomId);
+                Message.getMessages(roomId, function(messages) {
+                    vm.messages = messages;
+                });
+            });
         });
 
         function chatUser() {
             UserService.getUserProfileById($state.params.id, function(data) {
                 vm.user = data
-                console.log(vm.user);
             });
         }
 
@@ -164,10 +171,6 @@
                 $ionicScrollDelegate.$getByHandle('chatScroll').scrollBottom(true);
             });
             vm.newMessage = "";
-        }
-
-        function remove(chat) {
-            Message.remove(chat);
         }
 
         console.log("Chat controller loading...");
