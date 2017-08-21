@@ -3,13 +3,14 @@
         <user-logout></user-logout>
     </ion-nav-buttons>
     <ion-content>
-        <div class="row user-snip" ng-repeat="user in vm.users" ng-if="user.id !== currentUser.id">
+        <div class="row user-snip" ng-init="nosUser" ng-repeat="user in vm.users" ng-if="(user.id !== currentUser.id) && !(currentUser.friends.indexOf(user.id) > -1)">
             <div class="col img col-20"><img height="40" src="img/no_user.png"></div>
             <div class="col name col-55">
                 <b>{{user.username}}</b>
             </div>
             <div class="col add col-25"><button type="button" ng-click="vm.addFriend(user)" class="button button-small button-assertive">Add Friend</button></div>
         </div>
+        <div class="nodatatxt">No user found</div>
         <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
     </ion-content>
 </ion-view>
@@ -31,5 +32,15 @@
     
     .user-snip .add {
         margin-top: 5px;
+    }
+    
+    .nodatatxt {
+        position: absolute;
+        top: 50%;
+        opacity: 0.35;
+        font-size: 1.7em;
+        width: 100%;
+        text-align: center;
+        z-index: 1000;
     }
 </style>

@@ -85,14 +85,12 @@
         }
     }
 
-    Users.$inject = ["$firebaseArray", "firebase"];
+    Users.$inject = ["$firebaseArray", "firebase", "UserService"];
 
-    function Users($firebaseArray, firebase) {
-        var ref = firebase.database().ref();
-
+    function Users($firebaseArray, firebase, UserService) {
         return {
-            getAllUsers: function() {
-                return $firebaseArray(ref.child('users'));
+            getUsers: function() {
+                return $firebaseArray(firebase.database().ref().child('users'));
             }
         }
     }
@@ -112,7 +110,8 @@
             getProfile: getProfile,
             trackPresence: trackPresence,
             addToFriendList: addToFriendList,
-            getUserProfileById: getUserProfileById
+            getUserProfileById: getUserProfileById,
+            getAllMyFriends: getAllMyFriends
         }
 
         function trackPresence() {
@@ -141,7 +140,6 @@
                         newFriendList = data.val();
                         newFriendList.push(friendId);
                         newDataSet['friends'] = newFriendList;
-                        console.log(newFriendList);
                     }
                 });
                 return;
@@ -207,9 +205,13 @@
         }
 
         function getUserProfileById(id, callback) {
-            $firebaseArray(ref.child('users').child(id)).$ref().once('value', function(snapshort) {
-                callback(snapshort.val());
+            ref.child('/users/' + id).once('value', function(snapshot) {
+                callback(snapshot.val());
             });
+        }
+
+        function getAllMyFriends(callback) {
+            callback(this.getProfile().friends);
         }
     }
 

@@ -55,56 +55,83 @@
         console.log("Login controller loading...");
     }
 
-    FriendsCtrl.$inject = ['$scope', "$state", "Users"];
+    FriendsCtrl.$inject = ['$scope', "$timeout", "$state", "UserService"];
 
-    function FriendsCtrl($scope, $state, Users) {
+    function FriendsCtrl($scope, $timeout, $state, UserService) {
         var vm = $scope.vm = {};
 
-        angular.extend(vm, {});
-        console.log("Chats controller loading...");
-    }
-
-    UsersCtrl.$inject = ['$scope', "$state", "$timeout", "$ionicLoading", "Users", "UserService", "Rooms"];
-
-    function UsersCtrl($scope, $state, $timeout, $ionicLoading, Users, UserService, Rooms) {
-        var vm = $scope.vm = {};
-
-        $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
-            angular.extend(vm, {
-                openChat: openChat,
-                refresh: refresh,
-                addFriend: addFriend,
-                users: Users.getAllUsers(),
-                currentUser: UserService.getProfile()
-            });
+        angular.extend(vm, {
+            users: [],
+            refresh: refresh,
+            openChat: openChat,
+            getMyFriends: getMyFriends,
+            currentUser: UserService.getProfile()
         });
 
-        $scope.$on('$ionicView.afterEnter', function(event, viewData) {});
+        $scope.$on('$ionicView.afterEnter', function() {
+            vm.getMyFriends();
+        });
 
-        function addFriend(addUserinfo) {
-            Rooms.create(addUserinfo, function(status) {
-                console.log("Room create status", status);
+        function getMyFriends() {
+            vm.users = [];
+            UserService.getAllMyFriends(function(ids) {
+                ids.forEach(function(id) {
+                    UserService.getUserProfileById(id, function(data) {
+                        vm.users.push(data);
+                    });
+                });
             });
+
+        };
+
+        function openChat(user) {
+            $state.go('chat', { id: user.id });
         }
 
         function refresh() {
-            vm.users = Users.getAllUsers();
-            console.log("Refreshing");
+            vm.getMyFriends();
             $timeout(function() {
                 $scope.$broadcast('scroll.refreshComplete');
             }, 1000);
         }
 
-        function openChat(id) {
-            // $state.go('chat', { id: id });
+        console.log("Friends controller loading...");
+    }
+
+    UsersCtrl.$inject = ['$scope', "$timeout", "Users", "UserService", "Rooms"];
+
+    function UsersCtrl($scope, $timeout, Users, UserService, Rooms) {
+        var vm = $scope.vm = {};
+
+        angular.extend(vm, {
+            refresh: refresh,
+            addFriend: addFriend,
+            users: Users.getUsers(),
+            currentUser: UserService.getProfile()
+        });
+
+        function addFriend(addUserinfo) {
+            Rooms.create(addUserinfo, function(status) {
+                if (status) {
+                    vm.users.splice(vm.users.indexOf(addUserinfo), 1);
+                }
+            });
+        }
+
+        function refresh() {
+            vm.users = Users.getUsers();
+
+            $timeout(function() {
+                $scope.$broadcast('scroll.refreshComplete');
+            }, 1000);
         }
 
         console.log("Users controller loading...");
     }
 
-    ChatCtrl.$inject = ['$scope', '$state', 'UserService', 'Users', 'Message'];
+    ChatCtrl.$inject = ['$scope', '$state', 'Message', "UserService"];
 
-    function ChatCtrl($scope, $state, UserService, Users, Message) {
+    function ChatCtrl($scope, $state, Message, UserService) {
         var vm = $scope.vm = {};
 
         // back button enable on this page
@@ -113,12 +140,23 @@
         });
 
         angular.extend(vm, {
+            user: null,
             newMessage: "",
-            // messages: Message.get($state.params.roomId),
-            // currentUser: UserService.getProfile(),
             sendMessage: sendMessage,
-            remove: remove
+            remove: remove,
+            chatUser: chatUser
         });
+
+        $scope.$on('$ionicView.afterEnter', function() {
+            vm.chatUser();
+        });
+
+        function chatUser() {
+            UserService.getUserProfileById($state.params.id, function(data) {
+                vm.user = data
+                console.log(vm.user);
+            });
+        }
 
         function sendMessage(message) {
             Message.send(message).then(function() {
@@ -130,10 +168,6 @@
         function remove(chat) {
             Message.remove(chat);
         }
-
-        // UserService.getUserProfileById($state.params.id, function(data) {
-        //     vm.user = data;
-        // });
 
         console.log("Chat controller loading...");
     }
