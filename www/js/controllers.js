@@ -70,13 +70,12 @@
 
         $scope.$on('$ionicView.afterEnter', function() {
             vm.getMyFriends(function(data) {
-                console.log(7, data);
                 vm.users.push(data);
                 $scope.$apply();
             });
+
             if (UserService.getAddedFriendStatus()) {
                 vm.getMyFriends(function(data) {
-                    console.log(8, data);
                     vm.users.push(data);
                     $scope.$apply();
                 });
@@ -87,9 +86,11 @@
             vm.users = [];
             UserService.getAllMyFriends(function(ids) {
                 ids.forEach(function(id) {
-                    UserService.getUserProfileById(id, function(data) {
-                        callback(data);
-                    });
+                    if (id !== vm.currentUser.id) {
+                        UserService.getUserProfileById(id, function(data) {
+                            callback(data);
+                        });
+                    }
                 });
             });
         };
@@ -100,7 +101,6 @@
 
         function refresh() {
             vm.getMyFriends(function(data) {
-                console.log(9, data);
                 vm.users.push(data);
                 $scope.$apply();
             });
@@ -126,6 +126,7 @@
         });
 
         $scope.$on('$ionicView.afterEnter', function() {
+            vm.users = [];
             vm.getUsers();
         });
 
