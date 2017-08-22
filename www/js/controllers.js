@@ -70,12 +70,14 @@
 
         $scope.$on('$ionicView.afterEnter', function() {
             vm.getMyFriends(function(data) {
+                console.log(1);
                 vm.users.push(data);
                 $scope.$apply();
             });
 
             if (UserService.getAddedFriendStatus()) {
                 vm.getMyFriends(function(data) {
+                    console.log(2);
                     vm.users.push(data);
                     $scope.$apply();
                 });
@@ -84,10 +86,15 @@
 
         function getMyFriends(callback) {
             vm.users = [];
+            console.log(4);
             UserService.getAllMyFriends(function(ids) {
+                console.log(4.1);
                 ids.forEach(function(id) {
+                    console.log(4.2);
                     if (id !== vm.currentUser.id) {
+                        console.log(4.3);
                         UserService.getUserProfileById(id, function(data) {
+                            console.log(4.4);
                             callback(data);
                         });
                     }
@@ -100,7 +107,9 @@
         }
 
         function refresh() {
+            console.log(3);
             vm.getMyFriends(function(data) {
+                console.log(3.1);
                 vm.users.push(data);
                 $scope.$apply();
             });
@@ -126,11 +135,11 @@
         });
 
         $scope.$on('$ionicView.afterEnter', function() {
-            vm.users = [];
             vm.getUsers();
         });
 
         function getUsers() {
+            vm.users = [];
             var users = UserService.getUsers();
             users.$ref().once('value', function(snapshot) {
                 snapshot.forEach(function(item) {
