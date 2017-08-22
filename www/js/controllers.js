@@ -13,7 +13,7 @@
 
     function LoginCtrl($scope, $ionicModal, $state, $firebaseAuth, $ionicLoading, $rootScope, CONFIG, UserService, FacebookService) {
 
-        var vm = $scope.vm = {};
+        var vm = this;
         var ref = firebase.database().ref();
 
         angular.extend(vm, {
@@ -55,10 +55,10 @@
         console.log("Login controller loading...");
     }
 
-    FriendsCtrl.$inject = ['$scope', "$timeout", "$state", "UserService"];
+    FriendsCtrl.$inject = ['$scope', "$timeout", "$state", "$rootScope", "UserService"];
 
-    function FriendsCtrl($scope, $timeout, $state, UserService) {
-        var vm = $scope.vm = {};
+    function FriendsCtrl($scope, $timeout, $state, $rootScope, UserService) {
+        var vm = this;
 
         angular.extend(vm, {
             users: [],
@@ -69,16 +69,26 @@
         });
 
         $scope.$on('$ionicView.afterEnter', function() {
-            vm.getMyFriends();
+            vm.getMyFriends(function(data) {
+                console.log(7, data);
+                vm.users.push(data);
+                $scope.$apply();
+            });
+            if (UserService.getAddedFriendStatus()) {
+                vm.getMyFriends(function(data) {
+                    console.log(8, data);
+                    vm.users.push(data);
+                    $scope.$apply();
+                });
+            }
         });
 
-        function getMyFriends() {
+        function getMyFriends(callback) {
             vm.users = [];
             UserService.getAllMyFriends(function(ids) {
                 ids.forEach(function(id) {
                     UserService.getUserProfileById(id, function(data) {
-                        vm.users.push(data);
-                        $scope.$apply();
+                        callback(data);
                     });
                 });
             });
@@ -89,7 +99,11 @@
         }
 
         function refresh() {
-            vm.getMyFriends();
+            vm.getMyFriends(function(data) {
+                console.log(9, data);
+                vm.users.push(data);
+                $scope.$apply();
+            });
             $timeout(function() {
                 $scope.$broadcast('scroll.refreshComplete');
             }, 1000);
@@ -98,33 +112,48 @@
         console.log("Friends controller loading...");
     }
 
-    UsersCtrl.$inject = ['$scope', "$timeout", "UserService", "Rooms"];
+    UsersCtrl.$inject = ['$scope', "$timeout", "$rootScope", "UserService", "Rooms"];
 
-    function UsersCtrl($scope, $timeout, UserService, Rooms) {
-        var vm = $scope.vm = {};
+    function UsersCtrl($scope, $timeout, $rootScope, UserService, Rooms) {
+        var vm = this;
 
         angular.extend(vm, {
             refresh: refresh,
             addFriend: addFriend,
-            users: null,
+            users: [],
+            getUsers: getUsers,
             currentUser: UserService.getProfile()
         });
 
         $scope.$on('$ionicView.afterEnter', function() {
-            vm.users = UserService.getUsers();
+            vm.getUsers();
         });
+
+        function getUsers() {
+            var users = UserService.getUsers();
+            users.$ref().once('value', function(snapshot) {
+                snapshot.forEach(function(item) {
+                    var $item = item.val();
+                    if (($item.id !== vm.currentUser.id) && !(vm.currentUser.friends.indexOf($item.id) > -1)) {
+                        vm.users.push($item);
+                    }
+                });
+            });
+
+        };
 
         function addFriend(addUserinfo) {
             Rooms.create(addUserinfo, function(status) {
                 if (status) {
                     vm.users.splice(vm.users.indexOf(addUserinfo), 1);
+                    UserService.setAddedFriendStatus(addUserinfo);
                 }
             });
         }
 
         function refresh() {
+            vm.getUsers();
             $timeout(function() {
-                vm.users = UserService.getUsers();
                 $scope.$broadcast('scroll.refreshComplete');
             }, 1000);
         }
@@ -132,10 +161,10 @@
         console.log("Users controller loading...");
     }
 
-    ChatCtrl.$inject = ['$scope', '$state', '$ionicScrollDelegate', 'Message', "UserService", "Rooms"];
+    ChatCtrl.$inject = ['$scope', '$state', '$ionicScrollDelegate', '$rootScope', 'Message', "UserService", "Rooms"];
 
-    function ChatCtrl($scope, $state, $ionicScrollDelegate, Message, UserService, Rooms) {
-        var vm = $scope.vm = {};
+    function ChatCtrl($scope, $state, $ionicScrollDelegate, $rootScope, Message, UserService, Rooms) {
+        var vm = this;
 
         // back button enable on this page
         $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
@@ -179,7 +208,7 @@
     SettingCtrl.$inject = ['$scope', "$state", "UserService"];
 
     function SettingCtrl($scope, $state, UserService) {
-        var vm = $scope.vm = {};
+        var vm = this;
 
         angular.extend(vm, {
             user: UserService.getProfile()

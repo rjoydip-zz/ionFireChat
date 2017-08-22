@@ -15,9 +15,9 @@
         return $firebaseAuth(firebase.auth());
     }
 
-    Message.$inject = ["$firebaseArray", "Users", "UserService", "md5", "$q", "firebase"];
+    Message.$inject = ["$firebaseArray", "UserService", "md5", "$q", "firebase"];
 
-    function Message($firebaseArray, Users, UserService, md5, $q, firebase) {
+    function Message($firebaseArray, UserService, md5, $q, firebase) {
         var selectedRoomId;
         var chatMessagesForRoom;
         var ref = firebase.database().ref();
@@ -99,6 +99,7 @@
         var ref = firebase.database().ref();
         // Get a reference to my own presence status.
         var connectedRef = ref.child('/.info/connected');
+        var addedFriendsStatus = null;
 
         return {
             login: login,
@@ -110,7 +111,9 @@
             trackPresence: trackPresence,
             addToFriendList: addToFriendList,
             getUserProfileById: getUserProfileById,
-            getAllMyFriends: getAllMyFriends
+            getAllMyFriends: getAllMyFriends,
+            setAddedFriendStatus: setAddedFriendStatus,
+            getAddedFriendStatus: getAddedFriendStatus
         }
 
         function trackPresence() {
@@ -207,16 +210,24 @@
             ref.child('/users/' + id).once('value', function(snapshot) {
                 callback(snapshot.val());
             });
-        }
+        };
 
         function getUsers() {
             return $firebaseArray(firebase.database().ref().child('users'));
-        }
+        };
 
         function getAllMyFriends(callback) {
             callback(this.getProfile().friends);
-        }
-    }
+        };
+
+        function setAddedFriendStatus(data) {
+            this.addedFriendsStatus = data;
+        };
+
+        function getAddedFriendStatus(data) {
+            return this.addedFriendsStatus;
+        };
+    };
 
     FacebookService.$inject = ["$q", "firebase"];
 

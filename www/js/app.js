@@ -42,5 +42,6 @@ angular.module('Chat', ['ionic', 'firebase', 'configs', 'directives', 'controlle
                 $location.path("/login");
             }
         });
+
     });
 })
