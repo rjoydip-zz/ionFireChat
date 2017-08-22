@@ -61,44 +61,30 @@
         var vm = this;
 
         angular.extend(vm, {
-            users: [],
+            friendsId: [],
             refresh: refresh,
             openChat: openChat,
-            getMyFriends: getMyFriends,
-            currentUser: UserService.getProfile()
+            setMyFriendId: setMyFriendId,
+            currentUser: UserService.getProfile(),
+            getFriendProfileById: UserService.getFriendProfileById
         });
 
         $scope.$on('$ionicView.afterEnter', function() {
-            vm.getMyFriends(function(data) {
-                console.log(1);
-                vm.users.push(data);
-                $scope.$apply();
+            vm.setMyFriendId(function(status) {
+                console.log(1, status);
             });
 
             if (UserService.getAddedFriendStatus()) {
-                vm.getMyFriends(function(data) {
-                    console.log(2);
-                    vm.users.push(data);
-                    $scope.$apply();
+                vm.setMyFriendId(function(status) {
+                    console.log(2, status);
                 });
             }
         });
 
-        function getMyFriends(callback) {
-            vm.users = [];
-            console.log(4);
-            UserService.getAllMyFriends(function(ids) {
-                console.log(4.1);
-                ids.forEach(function(id) {
-                    console.log(4.2);
-                    if (id !== vm.currentUser.id) {
-                        console.log(4.3);
-                        UserService.getUserProfileById(id, function(data) {
-                            console.log(4.4);
-                            callback(data);
-                        });
-                    }
-                });
+        function setMyFriendId(callback) {
+            UserService.getAllMyFriendsId(function(ids) {
+                vm.friendsId = ids;
+                callback(true);
             });
         };
 
@@ -108,14 +94,12 @@
 
         function refresh() {
             console.log(3);
-            vm.getMyFriends(function(data) {
-                console.log(3.1);
-                vm.users.push(data);
-                $scope.$apply();
+            vm.setMyFriendId(function(status) {
+                if (status)
+                    $scope.$broadcast('scroll.refreshComplete');
+                else
+                    $scope.$broadcast('scroll.refreshComplete');
             });
-            $timeout(function() {
-                $scope.$broadcast('scroll.refreshComplete');
-            }, 1000);
         }
 
         console.log("Friends controller loading...");
@@ -135,17 +119,23 @@
         });
 
         $scope.$on('$ionicView.afterEnter', function() {
-            vm.getUsers();
+            vm.getUsers(function(data) {
+                if (data) {
+                    vm.users.push(data);
+                }
+            });
         });
 
-        function getUsers() {
+        function getUsers(callback) {
             vm.users = [];
             var users = UserService.getUsers();
             users.$ref().once('value', function(snapshot) {
                 snapshot.forEach(function(item) {
                     var $item = item.val();
                     if (($item.id !== vm.currentUser.id) && !(vm.currentUser.friends.indexOf($item.id) > -1)) {
-                        vm.users.push($item);
+                        callback($item);
+                    } else {
+                        callback(null);
                     }
                 });
             });
@@ -162,10 +152,14 @@
         }
 
         function refresh() {
-            vm.getUsers();
-            $timeout(function() {
-                $scope.$broadcast('scroll.refreshComplete');
-            }, 1000);
+            vm.getUsers(function(data) {
+                if (data) {
+                    vm.users.push(data);
+                    $scope.$broadcast('scroll.refreshComplete');
+                } else {
+                    $scope.$broadcast('scroll.refreshComplete');
+                }
+            });
         }
 
         console.log("Users controller loading...");

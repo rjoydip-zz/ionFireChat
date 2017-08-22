@@ -111,7 +111,8 @@
             trackPresence: trackPresence,
             addToFriendList: addToFriendList,
             getUserProfileById: getUserProfileById,
-            getAllMyFriends: getAllMyFriends,
+            getFriendProfileById: getFriendProfileById,
+            getAllMyFriendsId: getAllMyFriendsId,
             setAddedFriendStatus: setAddedFriendStatus,
             getAddedFriendStatus: getAddedFriendStatus
         }
@@ -212,12 +213,24 @@
             });
         };
 
+        function getFriendProfileById(id) {
+            var friendProfile = null;
+            ref.child('/users/' + id).once('value', function(snapshot) {
+                friendProfile = snapshot.val();
+            });
+            return friendProfile;
+        };
+
         function getUsers() {
             return $firebaseArray(firebase.database().ref().child('users'));
         };
 
-        function getAllMyFriends(callback) {
-            callback(this.getProfile().friends);
+        function getAllMyFriendsId(callback) {
+            var currentuser = this.getProfile();
+            var data = this.getProfile().friends.filter(function(item) {
+                return item !== currentuser.id;
+            });
+            callback(data);
         };
 
         function setAddedFriendStatus(data) {
