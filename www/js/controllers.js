@@ -180,6 +180,7 @@
 
     function ChatCtrl($scope, $state, $ionicScrollDelegate, $rootScope, Message, UserService, Rooms) {
         var vm = this;
+        var $roomId = null;
 
         // back button enable on this page
         $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
@@ -191,14 +192,15 @@
             newMessage: "",
             messages: [],
             chatUser: chatUser,
-            sendMessage: sendMessage
+            sendMessage: sendMessage,
         });
 
         $scope.$on('$ionicView.afterEnter', function() {
             vm.chatUser();
             Rooms.getRoomId($state.params.id, function(roomId) {
                 console.log("Room Id", roomId);
-                Message.getMessages(roomId, function(messages) {
+                $roomId = roomId;
+                Message.getMessages($roomId, function(messages) {
                     vm.messages = messages;
                 });
             });
@@ -212,6 +214,9 @@
 
         function sendMessage(message) {
             Message.send(message).then(function() {
+                Message.getMessages($roomId, function(messages) {
+                    vm.messages = messages;
+                });
                 $ionicScrollDelegate.$getByHandle('chatScroll').scrollBottom(true);
             });
             vm.newMessage = "";
@@ -226,8 +231,17 @@
         var vm = this;
 
         angular.extend(vm, {
+            refresh: refresh,
             user: UserService.getProfile()
         });
+
+        function refresh() {
+            vm.user = UserService.getProfile();
+            if (vm.user) {
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+        }
+
         console.log("Settings controller loading...");
     }
 

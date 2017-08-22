@@ -12,16 +12,15 @@
             <div class="chat-msg-items">
                 <div class="chat-item" ng-repeat="message in vm.messages track by $index" ng-class="{true: 'me', false: 'you'}[message.sender_email == vm.currentUser.email ]">
                     <!-- <div class="time">11: 20</div> -->
-                    {{message.sender_username}}
                     <div ng-if="!message.sender_username">
                         <div class="nodatatxt">{{message}}</div>
                     </div>
                     <div ng-if="message.sender_username">
                         <div class="user-info">
                             <a href="javascript:;" class="avatar">
-                                <img ng-src="img/no_user.png" width="100%">
+                                <img clas="profile_image" ng-src="img/no_user.png" width="100%">
                             </a>
-                            <p class="name">{{ message.sender_username }}</p>
+                            <!--<p class="name">{{ message.sender_username }}</p>-->
                         </div>
                         <div class="msg-panel">
                             <div class="msg-text">
@@ -56,5 +55,9 @@
         width: 100%;
         text-align: center;
         z-index: 1000;
+    }
+    
+    .profile_image {
+        border-radius: 50%;
     }
 </style>

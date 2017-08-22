@@ -5,7 +5,7 @@
     <ion-content>
         <div class="row user-snip" ng-repeat="friendId in vm.friendsId">
             <div class="col img col-20" ng-click="vm.openProfile(vm.getFriendProfileById(friendId).id)"><img height="40" src="img/no_user.png"></div>
-            <div class="col name col-80" ng-click="vm.openChat(vm.getFriendProfileById(friendId).id)">
+            <div class="col name col-80" ng-click="vm.openChat(vm.getFriendProfileById(friendId))">
                 <span>{{vm.getFriendProfileById(friendId).username}}</span>
             </div>
         </div>

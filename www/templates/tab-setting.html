@@ -12,17 +12,8 @@
                     <div>Tweet on <a href="https://twitter.com/rjoydip11">@rjoydip11</a></div>
                 </span>
             </div>
-            <ion-list>
-                <ion-item ng-repeat="post in posts">
-                    <img class="post-profile-image" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/94311/me.png"> {{post.text}}
-                    <div class="post-time">{{post.created_at }}</div>
-                    <div class="post-options">
-                        <i class="icon-reply"></i>
-                        <i class="icon-shuffle"></i>
-                    </div>
-                </ion-item>
-            </ion-list>
         </div>
+        <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
     </ion-content>
 </ion-view>
 
@@ -42,10 +33,10 @@
     
     #content {
         position: relative;
-        margin-top: 150px;
+        margin-top: 130px;
         background-color: white;
         box-shadow: 0px -1px 10px rgba(0, 0, 0, 0.4);
-        padding-top: 200px;
+        padding-top: 175px;
     }
     
     #profile-info {
@@ -58,11 +49,10 @@
     
     #profile-name {
         color: #444;
-        font-size: 26px;
+        font-size: 20px;
     }
     
     #profile-description {
-        font-size: 15px;
         color: #888;
     }
     
