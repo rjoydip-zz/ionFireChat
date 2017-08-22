@@ -7,7 +7,8 @@
         .controller("LoginCtrl", LoginCtrl)
         .controller("UsersCtrl", UsersCtrl)
         .controller("FriendsCtrl", FriendsCtrl)
-        .controller("SettingCtrl", SettingCtrl);
+        .controller("SettingCtrl", SettingCtrl)
+        .controller("ProfileCtrl", ProfileCtrl);
 
     LoginCtrl.$inject = ["$scope", "$ionicModal", "$state", "$firebaseAuth", "$ionicLoading", "$rootScope", "CONFIG", "UserService", "FacebookService"];
 
@@ -64,6 +65,7 @@
             friendsId: [],
             refresh: refresh,
             openChat: openChat,
+            openProfile: openProfile,
             setMyFriendId: setMyFriendId,
             currentUser: UserService.getProfile(),
             getFriendProfileById: UserService.getFriendProfileById
@@ -102,12 +104,16 @@
             });
         }
 
+        function openProfile(user) {
+            $state.go('profile', { id: user.id });
+        };
+
         console.log("Friends controller loading...");
     }
 
-    UsersCtrl.$inject = ['$scope', "$timeout", "$rootScope", "UserService", "Rooms"];
+    UsersCtrl.$inject = ['$scope', "$state", "$timeout", "$rootScope", "UserService", "Rooms"];
 
-    function UsersCtrl($scope, $timeout, $rootScope, UserService, Rooms) {
+    function UsersCtrl($scope, $state, $timeout, $rootScope, UserService, Rooms) {
         var vm = this;
 
         angular.extend(vm, {
@@ -115,6 +121,7 @@
             addFriend: addFriend,
             users: [],
             getUsers: getUsers,
+            openProfile: openProfile,
             currentUser: UserService.getProfile()
         });
 
@@ -160,10 +167,14 @@
                     $scope.$broadcast('scroll.refreshComplete');
                 }
             });
-        }
+        };
+
+        function openProfile(user) {
+            $state.go('profile', { id: user.id });
+        };
 
         console.log("Users controller loading...");
-    }
+    };
 
     ChatCtrl.$inject = ['$scope', '$state', '$ionicScrollDelegate', '$rootScope', 'Message', "UserService", "Rooms"];
 
@@ -218,6 +229,27 @@
             user: UserService.getProfile()
         });
         console.log("Settings controller loading...");
+    }
+
+    ProfileCtrl.$inject = ['$scope', "$state", "UserService"];
+
+    function ProfileCtrl($scope, $state, UserService) {
+        var vm = this;
+
+        // back button enable on this page
+        $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
+            viewData.enableBack = true;
+        });
+
+        angular.extend(vm, {
+            user: null
+        });
+
+        UserService.getUserProfileById($state.params.id, function(userData) {
+            vm.user = userData;
+        });
+
+        console.log("Profile controller loading...");
     }
 
 })();

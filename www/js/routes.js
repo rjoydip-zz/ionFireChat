@@ -70,6 +70,12 @@ angular.module('routes', [])
         controller: 'ChatCtrl as vm'
     })
 
+    .state('profile', {
+        url: '/profile/:id',
+        templateUrl: 'templates/profile.html',
+        controller: 'ProfileCtrl as vm'
+    })
+
     $urlRouterProvider.otherwise('/login');
 
 });

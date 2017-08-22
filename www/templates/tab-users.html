@@ -3,10 +3,9 @@
         <user-logout></user-logout>
     </ion-nav-buttons>
     <ion-content>
-        <!-- ng-if="(user.id !== currentUser.id) && !(currentUser.friends.indexOf(user.id) > -1)" -->
         <div class="row user-snip" ng-repeat="user in vm.users">
-            <div class="col img col-20"><img height="40" src="img/no_user.png"></div>
-            <div class="col name col-55">
+            <div class="col img col-20" ng-click="vm.openProfile(user)"><img height="40" src="img/no_user.png"></div>
+            <div class="col name col-55" ng-click="vm.openProfile(user)">
                 <b>{{user.username}}</b>
             </div>
             <div class="col add col-25"><button type="button" ng-click="vm.addFriend(user)" class="button button-small button-assertive">Add Friend</button></div>
