@@ -142,6 +142,8 @@
                     var $item = item.val();
                     if (($item.id !== vm.currentUser.id) && !(vm.currentUser.friends.indexOf($item.id) > -1)) {
                         $item.invite_status = Invite.getStatus($item.id);
+                        $item.color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
+                        console.log($item);
                         callback($item);
                     } else {
                         callback(null);

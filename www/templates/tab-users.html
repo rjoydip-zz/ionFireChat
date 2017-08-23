@@ -8,10 +8,10 @@
             <div class="col col-72" ng-click="vm.openProfile(user)">
                 <div class="row">
                     <div class="col col-25">
-                        <div class="first-letter" style="background-color: #e42112">R</div>
+                        <div class="first-letter" ng-style="{'background-color': user.color}">R</div>
                     </div>
                     <div class="col col-75">
-                        <span style="font-size: 18px;"><b>{{user.username}}</b></span>
+                        <span style="font-size: 20px;">{{user.username}}</span>
                     </div>
                 </div>
             </div>
@@ -22,62 +22,61 @@
         <div class="nodatatxt" ng-if="vm.users.length === 0">No user found</div>
         <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
     </ion-content>
+    <style parse-style>
+        .user-snip {
+            width: 100%;
+            display: inline-flex;
+        }
+        
+        .user-snip .img>img {
+            border-radius: 50%;
+            border: 1px solid #e42112;
+        }
+        
+        .user-snip .name {
+            margin-top: 10px;
+        }
+        
+        .user-snip .add {
+            margin-top: 5px;
+        }
+        
+        .nodatatxt {
+            position: absolute;
+            top: 50%;
+            opacity: 0.35;
+            font-size: 1.7em;
+            width: 100%;
+            text-align: center;
+            z-index: 1000;
+        }
+        
+        .first-letter {
+            height: 35px;
+            width: 35px;
+            text-align: center;
+            position: absolute;
+            border-radius: 50%;
+            padding: 8px;
+            color: #fff;
+            margin: -5px;
+        }
+        
+        .invite {
+            line-height: 0;
+            text-align: center;
+        }
+        
+        .align-center {
+            text-align: center;
+        }
+        
+        .align-left {
+            text-align: left;
+        }
+        
+        .align-right {
+            text-align: right;
+        }
+    </style>
 </ion-view>
-
-<style>
-    .user-snip {
-        width: 100%;
-        display: inline-flex;
-    }
-    
-    .user-snip .img>img {
-        border-radius: 50%;
-        border: 1px solid #e42112;
-    }
-    
-    .user-snip .name {
-        margin-top: 10px;
-    }
-    
-    .user-snip .add {
-        margin-top: 5px;
-    }
-    
-    .nodatatxt {
-        position: absolute;
-        top: 50%;
-        opacity: 0.35;
-        font-size: 1.7em;
-        width: 100%;
-        text-align: center;
-        z-index: 1000;
-    }
-    
-    .first-letter {
-        height: 35px;
-        width: 35px;
-        text-align: center;
-        position: absolute;
-        border-radius: 50%;
-        padding: 8px;
-        color: #fff;
-        margin: -5px;
-    }
-    
-    .invite {
-        line-height: 0;
-        text-align: center;
-    }
-    
-    .align-center {
-        text-align: center;
-    }
-    
-    .align-left {
-        text-align: left;
-    }
-    
-    .align-right {
-        text-align: right;
-    }
-</style>
