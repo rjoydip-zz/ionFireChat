@@ -76,6 +76,12 @@ angular.module('routes', [])
         controller: 'ProfileCtrl as vm'
     })
 
+    .state('notification', {
+        url: '/notification',
+        templateUrl: 'templates/notification.html',
+        controller: 'NotificationCtrl as vm'
+    })
+
     $urlRouterProvider.otherwise('/login');
 
 });

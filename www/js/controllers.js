@@ -8,7 +8,8 @@
         .controller("UsersCtrl", UsersCtrl)
         .controller("FriendsCtrl", FriendsCtrl)
         .controller("SettingCtrl", SettingCtrl)
-        .controller("ProfileCtrl", ProfileCtrl);
+        .controller("ProfileCtrl", ProfileCtrl)
+        .controller("NotificationCtrl", NotificationCtrl);
 
     LoginCtrl.$inject = ["$scope", "$ionicModal", "$state", "$firebaseAuth", "$ionicLoading", "$rootScope", "CONFIG", "UserService", "FacebookService"];
 
@@ -239,6 +240,8 @@
             vm.user = UserService.getProfile();
             if (vm.user) {
                 $scope.$broadcast('scroll.refreshComplete');
+            } else {
+                $scope.$broadcast('scroll.refreshComplete');
             }
         }
 
@@ -266,4 +269,42 @@
         console.log("Profile controller loading...");
     }
 
+    NotificationCtrl.$inject = ['$scope', "$state", "UserService"];
+
+    function NotificationCtrl($scope, $state, UserService) {
+        var vm = this;
+
+        // back button enable on this page
+        $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
+            viewData.enableBack = true;
+        });
+
+        angular.extend(vm, {
+            refresh: refresh,
+            notifications: null,
+            getNotifications: getNotifications
+        });
+
+        function getNotifications() {
+            UserService.getUserNotifications(function(notifications) {
+                notifications.$ref().once('value', function(snapshot) {
+                    vm.notifications = snapshot.val();
+                });
+            });
+        };
+
+        function refresh() {
+            if (vm.getNotifications()) {
+                $scope.$broadcast('scroll.refreshComplete');
+            } else {
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+        };
+
+        (function() {
+            vm.getNotifications();
+        })();
+
+        console.log("Profile controller loading...");
+    }
 })();

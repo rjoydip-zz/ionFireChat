@@ -1,0 +1,31 @@
+<ion-view view-title="Notifications">
+    <ion-nav-buttons side="right">
+        <user-logout></user-logout>
+    </ion-nav-buttons>
+    <ion-header-bar class="bar bar-header bar-assertive">
+        <ion-nav-buttons side="left">
+            <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+        </ion-nav-buttons>
+    </ion-header-bar>
+    <ion-content has-subheader="false">
+        <div class="row" ng-repeat="notification in vm.notifications">
+            <div class="col col-80">
+                {{notification.type}}
+            </div>
+            <div class="col col-10">
+                <i ng-click="vm.achive()" class="button-clear ion-plus ico-btn"></i>
+            </div>
+            <div class="col col-10">
+                <button ng-click="vm.remove()" class="button-clear ion-trash-a ico-btn"></button>
+            </div>
+        </div>
+        <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
+    </ion-content>
+</ion-view>
+
+<style>
+    .ico-btn::before {
+        color: #e42112;
+        font-size: 20px;
+    }
+</style>

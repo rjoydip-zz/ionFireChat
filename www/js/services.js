@@ -112,6 +112,8 @@
             getAllMyFriendsId: getAllMyFriendsId,
             setAddedFriendStatus: setAddedFriendStatus,
             getAddedFriendStatus: getAddedFriendStatus,
+            getUserNotificationNumber: getUserNotificationNumber,
+            getUserNotifications: getUserNotifications,
             addNotificationToUserProfile: addNotificationToUserProfile
         }
 
@@ -239,20 +241,29 @@
             return this.addedFriendsStatus;
         };
 
+        function getUserNotificationNumber(callback) {
+            ref.child('/users/' + this.getProfile().id + '/notification/').on("value", function(snapshot) {
+                callback(snapshot.numChildren());
+            });
+        };
+
+        function getUserNotifications(callback) {
+            callback($firebaseArray(ref.child('/users/' + this.getProfile().id + '/notification/')));
+        };
+
         function addNotificationToUserProfile(notiMessage) {
-            var currentuser = this.getProfile();
-            console.log("inside");
+            var currentuser = this.getProfile()
             ref.child('/users/' + currentuser.id).once('value', function(snapshot) {
                 if (snapshot.hasChild('notification')) {
                     console.log(exists);
                 } else {
-                    var updates = {};
-                    var newItemKey = firebase.database().ref().child('/users/' + currentuser.id).push().key;
-                    updates[newItemKey] = notiMessage;
-                    return firebase.database().ref().child('/users/' + currentuser.id).update(updates);
+                    var updates = {},
+                        newItemKey = ref.push().key;
+                    updates['/notification/' + newItemKey] = notiMessage;
+                    return ref.child('/users/' + currentuser.id).update(updates);
                 }
             });
-        }
+        };
 
     };
 

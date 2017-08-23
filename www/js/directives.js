@@ -28,13 +28,13 @@
         }
     }
 
-    userNotification.$inject = [];
+    userNotification.$inject = ["$state", "UserService"];
 
-    function userNotification() {
+    function userNotification($state, UserService) {
         return {
             restrict: 'EA',
-            template: '<button style="font-size: 20px;" class="button button-ion ion-android-notifications notifi" ng-click="refreshNotification()"></button>' +
-                ' <span class="noti_number">2</span> ' +
+            template: '<button style="font-size: 20px;" class="button button-ion ion-android-notifications notifi" ng-click="goNotification()"></button>' +
+                ' <span class="noti_number">{{notificationNumber}}</span> ' +
                 '<style>' +
                 '.noti_number { position: absolute;margin-top: -32px;z-index: 10000;left: 19px;background-color: #6b4545;color: #00000;border-radius: 50%;' +
                 'width: 20%;height: 45%;font-size: 0.9em;text-align: center;line-height: 0.9em;font-weight: bold;' +
@@ -45,20 +45,23 @@
                 var vm = $scope;
 
                 angular.extend(vm, {
-                    getNotification: getNotification,
-                    refreshNotification: refreshNotification
+                    notificationNumber: 0,
+                    getNosNotification: getNosNotification,
+                    goNotification: goNotification
                 });
 
-                function getNotification() {
-                    console.log("Get notification");
+                function getNosNotification() {
+                    UserService.getUserNotificationNumber(function(nos) {
+                        vm.notificationNumber = nos;
+                    });
                 }
 
-                function refreshNotification() {
-                    console.log("Refresh notification");
+                function goNotification() {
+                    $state.go('notification');
                 }
 
                 (function() {
-                    vm.getNotification();
+                    vm.getNosNotification();
                 })();
 
                 console.log("Notification directive working");
