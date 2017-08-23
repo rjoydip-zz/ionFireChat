@@ -97,6 +97,7 @@
         // Get a reference to my own presence status.
         var connectedRef = ref.child('/.info/connected');
         var addedFriendsStatus = null;
+        var userId = null;
 
         return {
             login: login,
@@ -182,6 +183,8 @@
                 template: 'Signing In'
             });
             Auth.$signInWithEmailAndPassword(user.email, user.password).then(function(authData) {
+                userId = authData.uid;
+                console.log(userId);
                 $ionicLoading.hide();
                 $state.go('tab.users');
             }).catch(function(error) {
@@ -242,12 +245,12 @@
         };
 
         function getUserNotificationNumber(callback) {
-            var user = JSON.parse(localStorage.getItem("chat.current_user"));
-            console.log(user);
-            ref.child('/users/' + user.id + '/notification/').on("value", function(snapshot) {
+            var currentuser = this.getProfile();
+            var id = (!Boolean(currentuser)) ? userId : currentuser.id;
+
+            ref.child('/users/' + id + '/notification/').on("value", function(snapshot) {
                 callback(snapshot.numChildren());
             });
-            return;
         };
 
         function getUserNotifications(callback) {
