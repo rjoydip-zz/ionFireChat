@@ -7,11 +7,11 @@
         <div class="row user-snip" ng-repeat="user in vm.users">
             <div class="col col-72" ng-click="vm.openProfile(user)">
                 <div class="row">
-                    <div class="col">
+                    <div class="col col-25">
                         <div class="first-letter" style="background-color: #e42112">R</div>
                     </div>
-                    <div class="col">
-                        <span style="font-size: 18px; margin-left: -35px;"><b>{{user.username}}</b></span>
+                    <div class="col col-75">
+                        <span style="font-size: 18px;"><b>{{user.username}}</b></span>
                     </div>
                 </div>
             </div>
