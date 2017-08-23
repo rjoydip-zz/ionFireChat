@@ -5,6 +5,7 @@
         .module('services', [])
         .factory("Auth", Auth)
         .factory("Rooms", Rooms)
+        .factory("Invite", Invite)
         .factory("Message", Message)
         .service("UserService", UserService)
         .service("FacebookService", FacebookService);
@@ -15,9 +16,9 @@
         return $firebaseAuth(firebase.auth());
     }
 
-    Message.$inject = ["$firebaseArray", "UserService", "md5", "$q", "firebase"];
+    Message.$inject = ["$firebaseArray", "UserService", "$q", "firebase"];
 
-    function Message($firebaseArray, UserService, md5, $q, firebase) {
+    function Message($firebaseArray, UserService, $q, firebase) {
         var selectedRoomId;
         var chatMessagesForRoom;
         var ref = firebase.database().ref();
@@ -64,17 +65,13 @@
         });
 
         return {
-            create: function(addUserinfo, callback) {
+            create: function(addUserinfo) {
                 ref.child('rooms').child(uuid).set({
                     messages: ['Welcome'],
                     myId: currentUser.id,
                     friendId: addUserinfo.id,
                 });
-                UserService.addToFriendList(addUserinfo.id, function(status) {
-                    if (status) {
-                        callback(status);
-                    }
-                });
+                return uuid;
             },
             getRoomId: function(friendId, callback) {
                 var currentUser = UserService.getProfile();
@@ -114,7 +111,8 @@
             getFriendProfileById: getFriendProfileById,
             getAllMyFriendsId: getAllMyFriendsId,
             setAddedFriendStatus: setAddedFriendStatus,
-            getAddedFriendStatus: getAddedFriendStatus
+            getAddedFriendStatus: getAddedFriendStatus,
+            addNotificationToUserProfile: addNotificationToUserProfile
         }
 
         function trackPresence() {
@@ -240,7 +238,57 @@
         function getAddedFriendStatus(data) {
             return this.addedFriendsStatus;
         };
+
+        function addNotificationToUserProfile(notiMessage) {
+            var currentuser = this.getProfile();
+            console.log("inside");
+            ref.child('/users/' + currentuser.id).once('value', function(snapshot) {
+                if (snapshot.hasChild('notification')) {
+                    console.log(exists);
+                } else {
+                    var updates = {};
+                    var newItemKey = firebase.database().ref().child('/users/' + currentuser.id).push().key;
+                    updates[newItemKey] = notiMessage;
+                    return firebase.database().ref().child('/users/' + currentuser.id).update(updates);
+                }
+            });
+        }
+
     };
+
+
+    Invite.$inject = ["$firebaseArray", "firebase", "UserService", "Rooms"];
+
+    function Invite($firebaseArray, firebase, UserService, Rooms) {
+        var ref = firebase.database().ref();
+        var currentUser = UserService.getProfile();
+        var iniviteStatus = [];
+
+        ref.child('invite').on('value', function(snapshot) {
+            snapshot.forEach(function(item) {
+                iniviteStatus[item.val().to] = item.val().read;
+            });
+        }, this);
+
+        return {
+            send: function(to) {
+                ref.child('invite').push().set({
+                    from: currentUser.id,
+                    to: to.id,
+                    read: false,
+                    roomId: Rooms.create(to)
+                });
+                UserService.addNotificationToUserProfile({
+                    to_id: to.id,
+                    type: 'accept',
+                    read: false
+                });
+            },
+            getStatus: function(to_id) {
+                return iniviteStatus[to_id] === undefined ? true : iniviteStatus[to_id];
+            }
+        };
+    }
 
     FacebookService.$inject = ["$q", "firebase"];
 

@@ -3,16 +3,18 @@
 
     angular
         .module('directives', [])
-        .directive('userLogout', userLogoutDirective);
+        .directive('userLogout', userLogout)
+        .directive('userNotification', userNotification);
 
-    userLogoutDirective.$inject = ["UserService"];
+    userLogout.$inject = ["UserService"];
 
-    function userLogoutDirective(UserService) {
+    function userLogout(UserService) {
         return {
             restrict: 'E',
-            template: '<button style="font-size: 20px;" class="button button-ion ion-power" ng-click="vm.logout()"></button>',
+            template: '<button style="font-size: 20px;" class="button button-ion ion-power" ng-click="logout()"></button>',
             link: function($scope, $element, $attrs) {
-                var vm = $scope.vm = {};
+                var vm = $scope;
+
                 angular.extend(vm, {
                     logout: logout
                 });
@@ -20,8 +22,49 @@
                 function logout() {
                     UserService.logout();
                 }
+
                 console.log("Logout directive working");
             }
         }
     }
+
+    userNotification.$inject = [];
+
+    function userNotification() {
+        return {
+            restrict: 'EA',
+            template: '<button style="font-size: 20px;" class="button button-ion ion-android-notifications notifi" ng-click="refreshNotification()"></button>' +
+                ' <span class="noti_number">2</span> ' +
+                '<style>' +
+                '.noti_number { position: absolute;margin-top: -32px;z-index: 10000;left: 19px;background-color: #6b4545;color: #00000;border-radius: 50%;' +
+                'width: 20%;height: 45%;font-size: 0.9em;text-align: center;line-height: 0.9em;font-weight: bold;' +
+                'button.button.button-ion.ion-android-notifications.notifi { color: #6b4545 !important; }' +
+                '}' +
+                '</style>',
+            link: function($scope, $element, $attrs) {
+                var vm = $scope;
+
+                angular.extend(vm, {
+                    getNotification: getNotification,
+                    refreshNotification: refreshNotification
+                });
+
+                function getNotification() {
+                    console.log("Get notification");
+                }
+
+                function refreshNotification() {
+                    console.log("Refresh notification");
+                }
+
+                (function() {
+                    vm.getNotification();
+                })();
+
+                console.log("Notification directive working");
+            }
+        }
+    }
+
+
 })();

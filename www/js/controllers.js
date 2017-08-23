@@ -111,16 +111,16 @@
         console.log("Friends controller loading...");
     }
 
-    UsersCtrl.$inject = ['$scope', "$state", "$timeout", "$rootScope", "UserService", "Rooms"];
+    UsersCtrl.$inject = ['$scope', "$state", "$timeout", "$rootScope", "UserService", "Rooms", "Invite"];
 
-    function UsersCtrl($scope, $state, $timeout, $rootScope, UserService, Rooms) {
+    function UsersCtrl($scope, $state, $timeout, $rootScope, UserService, Rooms, Invite) {
         var vm = this;
 
         angular.extend(vm, {
             refresh: refresh,
-            addFriend: addFriend,
             users: [],
             getUsers: getUsers,
+            invite: invite,
             openProfile: openProfile,
             currentUser: UserService.getProfile()
         });
@@ -140,23 +140,23 @@
                 snapshot.forEach(function(item) {
                     var $item = item.val();
                     if (($item.id !== vm.currentUser.id) && !(vm.currentUser.friends.indexOf($item.id) > -1)) {
+                        $item.invite_status = Invite.getStatus($item.id);
                         callback($item);
                     } else {
                         callback(null);
                     }
                 });
             });
-
         };
 
-        function addFriend(addUserinfo) {
-            Rooms.create(addUserinfo, function(status) {
-                if (status) {
-                    vm.users.splice(vm.users.indexOf(addUserinfo), 1);
-                    UserService.setAddedFriendStatus(addUserinfo);
+        function invite(addUserinfo) {
+            Invite.send(addUserinfo);
+            vm.users.map(function(item, key) {
+                if (item.id === addUserinfo.id) {
+                    vm.users[key].invite_status = false;
                 }
             });
-        }
+        };
 
         function refresh() {
             vm.getUsers(function(data) {

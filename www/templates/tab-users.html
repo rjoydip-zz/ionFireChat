@@ -1,14 +1,17 @@
 <ion-view view-title="Friends">
     <ion-nav-buttons side="right">
+        <user-notification></user-notification>
         <user-logout></user-logout>
     </ion-nav-buttons>
     <ion-content>
         <div class="row user-snip" ng-repeat="user in vm.users">
             <div class="col img col-20" ng-click="vm.openProfile(user)"><img height="40" src="img/no_user.png"></div>
-            <div class="col name col-55" ng-click="vm.openProfile(user)">
+            <div class="col name col-45" ng-click="vm.openProfile(user)">
                 <b>{{user.username}}</b>
             </div>
-            <div class="col add col-25"><button type="button" ng-click="vm.addFriend(user)" class="button button-small button-assertive">Add Friend</button></div>
+            <div class="col add col-35 align-center">
+                <button type="button" ng-click="vm.invite(user)" class="button button-small button-assertive icon ion-plus" ng-disabled="!user.invite_status" ng-bind-html="!user.invite_status ? '&nbsp;Invitation send' : '&nbsp;Invite'"></button>
+            </div>
         </div>
         <div class="nodatatxt" ng-if="vm.users.length === 0">No user found</div>
         <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
@@ -23,7 +26,7 @@
     
     .user-snip .img>img {
         border-radius: 50%;
-        border: 1px solid #292222;
+        border: 1px solid #e42112;
     }
     
     .user-snip .name {
@@ -42,5 +45,14 @@
         width: 100%;
         text-align: center;
         z-index: 1000;
+    }
+    
+    .invite {
+        line-height: 0;
+        text-align: center;
+    }
+    
+    .align-center {
+        text-align: center;
     }
 </style>
