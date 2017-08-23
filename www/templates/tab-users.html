@@ -8,7 +8,7 @@
             <div class="col col-72" ng-click="vm.openProfile(user)">
                 <div class="row">
                     <div class="col col-25">
-                        <div class="first-letter" ng-style="{'background-color': user.color}">R</div>
+                        <div class="first-letter" ng-style="{'background-color': user.color}">{{user.username.charAt(0)}}</div>
                     </div>
                     <div class="col col-75">
                         <span style="font-size: 20px;">{{user.username}}</span>

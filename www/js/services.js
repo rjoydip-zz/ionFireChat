@@ -242,25 +242,28 @@
         };
 
         function getUserNotificationNumber(callback) {
-            ref.child('/users/' + this.getProfile().id + '/notification/').on("value", function(snapshot) {
+            var user = JSON.parse(localStorage.getItem("chat.current_user"));
+            console.log(user);
+            ref.child('/users/' + user.id + '/notification/').on("value", function(snapshot) {
                 callback(snapshot.numChildren());
             });
+            return;
         };
 
         function getUserNotifications(callback) {
             callback($firebaseArray(ref.child('/users/' + this.getProfile().id + '/notification/')));
         };
 
-        function addNotificationToUserProfile(notiMessage) {
+        function addNotificationToUserProfile(id, notiMessage) {
             var currentuser = this.getProfile()
-            ref.child('/users/' + currentuser.id).once('value', function(snapshot) {
+            ref.child('/users/' + id).once('value', function(snapshot) {
                 if (snapshot.hasChild('notification')) {
                     console.log(exists);
                 } else {
                     var updates = {},
                         newItemKey = ref.push().key;
                     updates['/notification/' + newItemKey] = notiMessage;
-                    return ref.child('/users/' + currentuser.id).update(updates);
+                    return ref.child('/users/' + id).update(updates);
                 }
             });
         };
@@ -289,8 +292,8 @@
                     read: false,
                     roomId: Rooms.create(to)
                 });
-                UserService.addNotificationToUserProfile({
-                    to_id: to.id,
+                UserService.addNotificationToUserProfile(to.id, {
+                    to_id: currentUser.id,
                     type: 'accept',
                     read: false
                 });

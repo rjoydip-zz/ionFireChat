@@ -9,14 +9,11 @@
     </ion-header-bar>
     <ion-content has-subheader="false">
         <div class="row" ng-repeat="notification in vm.notifications">
-            <div class="col col-80">
+            <div class="col col-90">
                 {{notification.type}}
             </div>
             <div class="col col-10">
-                <i ng-click="vm.achive()" class="button-clear ion-plus ico-btn"></i>
-            </div>
-            <div class="col col-10">
-                <button ng-click="vm.remove()" class="button-clear ion-trash-a ico-btn"></button>
+                <i ng-click="vm.achive()" class="button-clear ico-btn ion-android-checkmark-circle"></i>
             </div>
         </div>
         <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
@@ -26,6 +23,6 @@
 <style>
     .ico-btn::before {
         color: #e42112;
-        font-size: 20px;
+        font-size: 23px;
     }
 </style>

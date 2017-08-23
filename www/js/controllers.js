@@ -143,7 +143,6 @@
                     if (($item.id !== vm.currentUser.id) && !(vm.currentUser.friends.indexOf($item.id) > -1)) {
                         $item.invite_status = Invite.getStatus($item.id);
                         $item.color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
-                        console.log($item);
                         callback($item);
                     } else {
                         callback(null);
@@ -283,9 +282,14 @@
 
         angular.extend(vm, {
             refresh: refresh,
+            achive: achive,
             notifications: null,
             getNotifications: getNotifications
         });
+
+        function achive() {
+
+        };
 
         function getNotifications() {
             UserService.getUserNotifications(function(notifications) {
