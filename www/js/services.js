@@ -77,7 +77,10 @@
                 var currentUser = UserService.getProfile();
                 ref.child('rooms').once('value', function(snapshot) {
                     snapshot.forEach(function(item) {
-                        if (item.val().friendId === friendId && item.val().myId === currentUser.id) {
+                        if (
+                            (item.val().friendId === friendId && item.val().myId === currentUser.id) ||
+                            (item.val().friendId === currentUser.id && item.val().myId === friendId)
+                        ) {
                             callback(item.key);
                         }
                     });
