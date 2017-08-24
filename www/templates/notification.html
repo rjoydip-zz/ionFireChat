@@ -9,11 +9,20 @@
     </ion-header-bar>
     <ion-content has-subheader="false">
         <div class="row" ng-repeat="notification in vm.notifications">
-            <div class="col col-90">
-                {{notification.type}}
-            </div>
             <div class="col col-10">
-                <i ng-click="vm.achive(notification)" class="button-clear ico-btn ion-android-checkmark-circle"></i>
+                <div class="first-letter" ng-style="{'background-color': notification.color || 'rgb(149, 118, 49)'}">{{notification.type.toUpperCase().charAt(0)}}</div>
+            </div>
+            <div class="col col-70 noti-message">
+                {{notification.message}}
+            </div>
+            <div ng-if="showload" class="col col-20">
+                <i ng-click="vm.declain(notification,notification.type)" class="button-clear ico-btn ion-loop"></i>
+            </div>
+            <div class="col col-10" ng-if="!showload">
+                <i ng-click="vm.declain(notification,notification.type); showload = true" class="button-clear ico-btn ion-android-cancel"></i>
+            </div>
+            <div class="col col-10" ng-if="!showload">
+                <i ng-click="vm.accept(notification,notification.type)" class="button-clear ico-btn ion-android-checkmark-circle"></i>
             </div>
         </div>
         <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
@@ -24,5 +33,20 @@
     .ico-btn::before {
         color: #e42112;
         font-size: 23px;
+    }
+    
+    .first-letter {
+        height: 35px;
+        width: 35px;
+        text-align: center;
+        position: absolute;
+        border-radius: 50%;
+        padding: 8px;
+        color: #fff;
+        margin: -5px;
+    }
+    
+    .noti-message {
+        font-size: 1.0em;
     }
 </style>

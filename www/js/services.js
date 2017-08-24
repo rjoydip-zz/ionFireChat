@@ -70,6 +70,7 @@
                     messages: ['Welcome'],
                     myId: currentUser.id,
                     friendId: addUserinfo.id,
+                    device_uuid: '' // for push notification
                 });
                 return uuid;
             },
@@ -263,10 +264,13 @@
             var currentuser = this.getProfile()
             ref.child('/users/' + id).once('value', function(snapshot) {
                 if (snapshot.hasChild('notification')) {
-                    console.log(exists);
+                    console.log('exists');
                 } else {
                     var updates = {},
                         newItemKey = ref.push().key;
+
+                    notiMessage.id = newItemKey;
+
                     updates['/notification/' + newItemKey] = notiMessage;
                     return ref.child('/users/' + id).update(updates);
                 }
@@ -299,14 +303,24 @@
                 }).then(function() {
                     UserService.addNotificationToUserProfile(to.id, {
                         to_id: currentUser.id,
-                        type: 'accept',
+                        type: 'Invite',
+                        color: "#" + ((1 << 24) * Math.random() | 0).toString(16),
                         read: false,
-                        message: ''
+                        message: currentUser.username + ' sends a invitation to you'
                     });
                 });
             },
             getStatus: function(to_id) {
                 return iniviteStatus[to_id] === undefined ? true : iniviteStatus[to_id];
+            },
+            $remove: function(id, callback) {
+                ref.child('invite').child(id).remove(function(error) {
+                    if (error) {
+                        callback(false);
+                    } else {
+                        callback(true);
+                    }
+                });
             }
         };
     }

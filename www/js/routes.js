@@ -79,7 +79,7 @@ angular.module('routes', [])
     .state('notification', {
         url: '/notification',
         templateUrl: 'templates/notification.html',
-        controller: 'NotificationCtrl as vm'
+        controller: 'NotificationCtrl as vm',
     })
 
     $urlRouterProvider.otherwise('/login');

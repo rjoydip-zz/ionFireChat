@@ -14,11 +14,9 @@
     LoginCtrl.$inject = ["$scope", "$ionicModal", "$state", "$firebaseAuth", "$ionicLoading", "$rootScope", "CONFIG", "UserService", "FacebookService"];
 
     function LoginCtrl($scope, $ionicModal, $state, $firebaseAuth, $ionicLoading, $rootScope, CONFIG, UserService, FacebookService) {
-
-        var vm = this;
         var ref = firebase.database().ref();
 
-        angular.extend(vm, {
+        angular.extend(this, {
             user: {},
             patterns: {
                 email: /^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$/
@@ -60,9 +58,7 @@
     FriendsCtrl.$inject = ['$scope', "$timeout", "$state", "$rootScope", "UserService"];
 
     function FriendsCtrl($scope, $timeout, $state, $rootScope, UserService) {
-        var vm = this;
-
-        angular.extend(vm, {
+        angular.extend(this, {
             friendsId: [],
             refresh: refresh,
             openChat: openChat,
@@ -115,9 +111,7 @@
     UsersCtrl.$inject = ['$scope', "$state", "$timeout", "$rootScope", "UserService", "Rooms", "Invite"];
 
     function UsersCtrl($scope, $state, $timeout, $rootScope, UserService, Rooms, Invite) {
-        var vm = this;
-
-        angular.extend(vm, {
+        angular.extend(this, {
             refresh: refresh,
             users: [],
             getUsers: getUsers,
@@ -178,7 +172,6 @@
     ChatCtrl.$inject = ['$scope', '$state', '$ionicScrollDelegate', '$rootScope', 'Message', "UserService", "Rooms"];
 
     function ChatCtrl($scope, $state, $ionicScrollDelegate, $rootScope, Message, UserService, Rooms) {
-        var vm = this;
         var $roomId = null;
 
         // back button enable on this page
@@ -186,7 +179,7 @@
             viewData.enableBack = true;
         });
 
-        angular.extend(vm, {
+        angular.extend(this, {
             user: null,
             newMessage: "",
             messages: [],
@@ -227,9 +220,7 @@
     SettingCtrl.$inject = ['$scope', "$state", "UserService"];
 
     function SettingCtrl($scope, $state, UserService) {
-        var vm = this;
-
-        angular.extend(vm, {
+        angular.extend(this, {
             refresh: refresh,
             user: UserService.getProfile()
         });
@@ -249,14 +240,12 @@
     ProfileCtrl.$inject = ['$scope', "$state", "UserService"];
 
     function ProfileCtrl($scope, $state, UserService) {
-        var vm = this;
-
         // back button enable on this page
         $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
             viewData.enableBack = true;
         });
 
-        angular.extend(vm, {
+        angular.extend(this, {
             user: null
         });
 
@@ -267,25 +256,48 @@
         console.log("Profile controller loading...");
     }
 
-    NotificationCtrl.$inject = ['$scope', "$state", "UserService"];
+    NotificationCtrl.$inject = ['$scope', "$state", "UserService", "Invite"];
 
-    function NotificationCtrl($scope, $state, UserService) {
-        var vm = this;
-
+    function NotificationCtrl($scope, $state, UserService, Invite) {
         // back button enable on this page
         $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
             viewData.enableBack = true;
         });
 
-        angular.extend(vm, {
+        angular.extend(this, {
+            showload: false,
             refresh: refresh,
-            achive: achive,
-            notifications: null,
+            accept: accept,
+            declain: declain,
+            notifications: [],
             getNotifications: getNotifications
         });
 
-        function achive() {
+        function accept() {
 
+        };
+
+        function declain(notifObj, type) {
+            vm.showload = true;
+            console.log(1);
+            switch (type.toLowerCase()) {
+                case 'invite':
+                    console.log(2);
+                    Invite.$remove(notifObj.id, function(status) {
+                        console.log(3);
+                        if (status) {
+                            console.log(4);
+                            vm.notifications = Object.keys(vm.notifications).filter(function(item) {
+                                return item !== notifObj.id
+                            });
+                            console.log(vm.notifications, 5);
+                        }
+                        // show error message
+                    });
+                    break;
+                default:
+                    break;
+            }
         };
 
         function getNotifications() {
