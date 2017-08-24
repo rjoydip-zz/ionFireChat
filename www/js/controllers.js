@@ -222,6 +222,11 @@
             user: null
         });
 
+        $scope.$on('$ionicView.afterEnter', function() {
+            console.log(1);
+            getuserDetails();
+        });
+
         function getuserDetails() {
             vm.user = null;
             return vm.user = UserService.getProfile();
