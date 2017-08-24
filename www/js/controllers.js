@@ -223,19 +223,19 @@
         });
 
         function getuserDetails() {
+            vm.user = null;
             return vm.user = UserService.getProfile();
         };
 
         function refresh() {
             if (getuserDetails()) {
                 $scope.$broadcast('scroll.refreshComplete');
-            } else {
-                $scope.$broadcast('scroll.refreshComplete');
             }
         }
 
         (function() {
             getuserDetails();
+            console.log(getuserDetails());
         })();
 
         console.log("Settings controller loading...");
