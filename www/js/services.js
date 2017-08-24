@@ -184,31 +184,33 @@
             });
             Auth.$signInWithEmailAndPassword(user.email, user.password).then(function(authData) {
                 userId = authData.uid;
-                console.log(userId);
                 $ionicLoading.hide();
+                localStorage.setItem('chat.current_user', JSON.stringify({ email: user.email, id: userId }));
                 $state.go('tab.users');
             }).catch(function(error) {
                 alert("Authentication failed:" + error.message);
                 $ionicLoading.hide();
             });
-        }
+        };
 
         function logout() {
             $ionicLoading.hide({
                 template: 'Logging Out...'
             });
             this.trackPresence();
+            localStorage.removeItem('chat.current_user');
             Auth.$signOut();
-        }
+        };
 
         function saveProfile(user) {
             localStorage.setItem("chat.current_user", JSON.stringify(user));
-        }
+            return this;
+        };
 
         function getProfile() {
             var user = localStorage.getItem("chat.current_user");
             return user && JSON.parse(user);
-        }
+        };
 
         function getUserProfileById(id, callback) {
             ref.child('/users/' + id).once('value', function(snapshot) {
@@ -294,11 +296,13 @@
                     to: to.id,
                     read: false,
                     roomId: Rooms.create(to)
-                });
-                UserService.addNotificationToUserProfile(to.id, {
-                    to_id: currentUser.id,
-                    type: 'accept',
-                    read: false
+                }).then(function() {
+                    UserService.addNotificationToUserProfile(to.id, {
+                        to_id: currentUser.id,
+                        type: 'accept',
+                        read: false,
+                        message: ''
+                    });
                 });
             },
             getStatus: function(to_id) {

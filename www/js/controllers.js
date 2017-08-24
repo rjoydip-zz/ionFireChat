@@ -123,29 +123,31 @@
             getUsers: getUsers,
             invite: invite,
             openProfile: openProfile,
-            currentUser: UserService.getProfile()
+            currentUser: null
         });
 
         $scope.$on('$ionicView.afterEnter', function() {
-            vm.getUsers(function(data) {
-                if (data) {
-                    vm.users.push(data);
+            vm.getUsers(function(status) {
+                if (status) {
+
                 }
             });
         });
 
         function getUsers(callback) {
             vm.users = [];
-            var users = UserService.getUsers();
-            users.$ref().once('value', function(snapshot) {
+            vm.currentUser = UserService.getProfile();
+
+            UserService.getUsers().$ref().once('value', function(snapshot) {
                 snapshot.forEach(function(item) {
                     var $item = item.val();
                     if (($item.id !== vm.currentUser.id) && !(vm.currentUser.friends.indexOf($item.id) > -1)) {
                         $item.invite_status = Invite.getStatus($item.id);
                         $item.color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
-                        callback($item);
+                        vm.users.push($item);
+                        callback(true);
                     } else {
-                        callback(null);
+                        callback(false);
                     }
                 });
             });
@@ -161,13 +163,8 @@
         };
 
         function refresh() {
-            vm.getUsers(function(data) {
-                if (data) {
-                    vm.users.push(data);
-                    $scope.$broadcast('scroll.refreshComplete');
-                } else {
-                    $scope.$broadcast('scroll.refreshComplete');
-                }
+            vm.getUsers(function(status) {
+                $scope.$broadcast('scroll.refreshComplete');
             });
         };
 
