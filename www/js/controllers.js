@@ -14,9 +14,11 @@
     LoginCtrl.$inject = ["$scope", "$ionicModal", "$state", "$firebaseAuth", "$ionicLoading", "$rootScope", "CONFIG", "UserService", "FacebookService"];
 
     function LoginCtrl($scope, $ionicModal, $state, $firebaseAuth, $ionicLoading, $rootScope, CONFIG, UserService, FacebookService) {
+
+        var vm = this;
         var ref = firebase.database().ref();
 
-        angular.extend(this, {
+        angular.extend(vm, {
             user: {},
             patterns: {
                 email: /^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$/
@@ -58,7 +60,9 @@
     FriendsCtrl.$inject = ['$scope', "$timeout", "$state", "$rootScope", "UserService"];
 
     function FriendsCtrl($scope, $timeout, $state, $rootScope, UserService) {
-        angular.extend(this, {
+        var vm = this;
+
+        angular.extend(vm, {
             friendsId: [],
             refresh: refresh,
             openChat: openChat,
@@ -111,7 +115,9 @@
     UsersCtrl.$inject = ['$scope', "$state", "$timeout", "$rootScope", "UserService", "Rooms", "Invite"];
 
     function UsersCtrl($scope, $state, $timeout, $rootScope, UserService, Rooms, Invite) {
-        angular.extend(this, {
+        var vm = this;
+
+        angular.extend(vm, {
             refresh: refresh,
             users: [],
             getUsers: getUsers,
@@ -172,6 +178,7 @@
     ChatCtrl.$inject = ['$scope', '$state', '$ionicScrollDelegate', '$rootScope', 'Message', "UserService", "Rooms"];
 
     function ChatCtrl($scope, $state, $ionicScrollDelegate, $rootScope, Message, UserService, Rooms) {
+        var vm = this;
         var $roomId = null;
 
         // back button enable on this page
@@ -179,7 +186,7 @@
             viewData.enableBack = true;
         });
 
-        angular.extend(this, {
+        angular.extend(vm, {
             user: null,
             newMessage: "",
             messages: [],
@@ -220,7 +227,9 @@
     SettingCtrl.$inject = ['$scope', "$state", "UserService"];
 
     function SettingCtrl($scope, $state, UserService) {
-        angular.extend(this, {
+        var vm = this;
+
+        angular.extend(vm, {
             refresh: refresh,
             user: UserService.getProfile()
         });
@@ -240,12 +249,14 @@
     ProfileCtrl.$inject = ['$scope', "$state", "UserService"];
 
     function ProfileCtrl($scope, $state, UserService) {
+        var vm = this;
+
         // back button enable on this page
         $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
             viewData.enableBack = true;
         });
 
-        angular.extend(this, {
+        angular.extend(vm, {
             user: null
         });
 
@@ -259,12 +270,14 @@
     NotificationCtrl.$inject = ['$scope', "$state", "UserService", "Invite"];
 
     function NotificationCtrl($scope, $state, UserService, Invite) {
+        var vm = this;
+
         // back button enable on this page
         $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
             viewData.enableBack = true;
         });
 
-        angular.extend(this, {
+        angular.extend(vm, {
             showload: false,
             refresh: refresh,
             accept: accept,
