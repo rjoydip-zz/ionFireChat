@@ -27,14 +27,11 @@
             getMessages: getMessages
         }
 
-        function getMessages(roomId, callback) {
-            chatMessagesForRoom = $firebaseArray(ref.child('/rooms/' + roomId + '/messages'));
-            ref.child('/rooms/' + roomId + '/messages').once('value', function(snaphot) {
-                callback(snaphot.val());
-            });
+        function getMessages(roomId) {
+            return $firebaseArray(ref.child('/rooms/' + roomId + '/messages'));
         }
 
-        function send(message) {
+        function send(roomID, message) {
             var deferred = $q.defer();
             var currentUser = UserService.getProfile();
             if (message) {
@@ -42,11 +39,13 @@
                     sender_username: currentUser.username,
                     sender_email: currentUser.email,
                     content: message,
+                    color_code: currentUser.color_code,
                     createdAt: firebase.database.ServerValue.TIMESTAMP
                 };
-                chatMessagesForRoom.$add(chatMessage).then(function(data) {
-                    deferred.resolve();
-                });
+                $firebaseArray(ref.child('/rooms/' + roomID).child('messages'))
+                    .$add(chatMessage).then(function(data) {
+                        deferred.resolve($firebaseArray(ref.child('/rooms/' + roomID).child('messages')));
+                    });
                 return deferred.promise;
             }
         }
@@ -68,21 +67,18 @@
 
                 ref.child('rooms').child(uuid).set({
                     messages: ['Welcome'],
-                    myId: currentUser.id,
-                    friendId: addUserinfo.id,
+                    myId: addUserinfo.id,
+                    friendId: currentUser.id,
                 }).then(function() {
                     callback(uuid);
                 });
             },
             getRoomId: function(friendId, callback) {
                 var currentUser = UserService.getProfile();
-                var roomId = null;
-
                 ref.child('rooms').once('value', function(snapshot) {
                     snapshot.forEach(function(item) {
                         if (item.val().friendId === friendId && item.val().myId === currentUser.id) {
                             callback(item.key);
-                            return;
                         }
                     });
                 });
@@ -234,11 +230,18 @@
         function addedFriendInList(id, callback) {
             var currentUser = this.getProfile();
 
-            ref.child('/users/' + currentUser.id + '/friends/').once('value', function(snapshot) {
-                var data = snapshot.val();
-                data.push(id);
-                ref.child('/users/' + currentUser.id + '/friends/').update(data);
-                callback(true);
+            ref.child('/users/' + currentUser.id + '/friends/').once('value', function(snapshot1) {
+                var data1 = snapshot1.val();
+                data1.push(id);
+                ref.child('/users/' + currentUser.id + '/friends/').update(data1);
+
+                ref.child('/users/' + id + '/friends/').once('value', function(snapshot2) {
+                    var data2 = snapshot2.val();
+                    data2.push(currentUser.id);
+                    ref.child('/users/' + id + '/friends/').update(data2);
+
+                    callback(true);
+                });
             });
         };
 

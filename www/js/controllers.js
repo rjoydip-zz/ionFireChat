@@ -75,7 +75,6 @@
                     UserService.getUserProfile(item, function(data) {
                         if (data.id !== vm.currentUser.id) {
                             vm.users.push(data);
-                            console.log(vm.users);
                         }
                     });
                 });
@@ -178,18 +177,13 @@
             user: null,
             newMessage: "",
             messages: [],
-            chatUser: chatUser,
             sendMessage: sendMessage,
         });
 
         $scope.$on('$ionicView.afterEnter', function() {
-            vm.chatUser();
             Rooms.getRoomId($state.params.id, function(roomId) {
-                console.log("Room Id", roomId);
                 $roomId = roomId;
-                Message.getMessages($roomId, function(messages) {
-                    vm.messages = messages;
-                });
+                vm.messages = Message.getMessages($roomId);
             });
         });
 
@@ -200,14 +194,18 @@
         }
 
         function sendMessage(message) {
-            Message.send(message).then(function() {
-                Message.getMessages($roomId, function(messages) {
-                    vm.messages = messages;
+            if (message) {
+                Message.send($roomId, message).then(function(message) {
+                    vm.messages = message;
+                    $ionicScrollDelegate.$getByHandle('chatScroll').scrollBottom(true);
                 });
-                $ionicScrollDelegate.$getByHandle('chatScroll').scrollBottom(true);
-            });
+            }
             vm.newMessage = "";
         }
+
+        (function() {
+            chatUser();
+        })();
 
         console.log("Chat controller loading...");
     }
@@ -223,7 +221,6 @@
         });
 
         $scope.$on('$ionicView.afterEnter', function() {
-            console.log(1);
             getuserDetails();
         });
 
@@ -240,7 +237,6 @@
 
         (function() {
             getuserDetails();
-            console.log(getuserDetails());
         })();
 
         console.log("Settings controller loading...");

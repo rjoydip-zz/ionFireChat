@@ -10,7 +10,7 @@
     <ion-content has-subheader="false">
         <div class="row" ng-repeat="notification in vm.notifications">
             <div class="col col-10">
-                <div class="first-letter" ng-style="{'background-color': notification.color || 'rgb(149, 118, 49)'}">{{notification.type.toUpperCase().charAt(0)}}</div>
+                <div class="first-letter" ng-style="{'background-color': notification.color_code}">{{notification.type.toUpperCase().charAt(0)}}</div>
             </div>
             <div class="col col-70 noti-message">
                 {{notification.message}}

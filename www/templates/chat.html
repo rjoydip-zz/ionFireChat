@@ -14,14 +14,11 @@
                 <div class="chat-item" ng-repeat="message in vm.messages track by $index" ng-class="{true: 'me', false: 'you'}[message.sender_email == vm.currentUser.email ]">
                     <!-- <div class="time">11: 20</div> -->
                     <div ng-if="!message.sender_username">
-                        <div class="nodatatxt">{{message}}</div>
+                        <div class="nodatatxt">Welcome</div>
                     </div>
                     <div ng-if="message.sender_username">
                         <div class="user-info">
-                            <a href="javascript:;" class="avatar">
-                                <img clas="profile_image" ng-src="img/no_user.png" width="100%">
-                            </a>
-                            <!--<p class="name">{{ message.sender_username }}</p>-->
+                            <div class="first-letter" ng-style="{'background-color': message.color_code}">{{message.sender_username.charAt(0)}}</div>
                         </div>
                         <div class="msg-panel">
                             <div class="msg-text">
@@ -39,8 +36,8 @@
         <form name="chatForm">
             <div class="chat-input">
                 <div class="input-area">
-                    <input type="text" ng-model="vm.newMessage" placeholder="Type in your message..." required>
-                    <button class="send-msg-btn button " ng-disabled="!chatForm.$valid" ng-click="vm.sendMessage(vm.newMessage)"> Send </button>
+                    <input type="text" ng-model="vm.newMessage" placeholder="Type in your message...">
+                    <button class="send-msg-btn button" ng-click="vm.sendMessage(vm.newMessage)"> Send </button>
                 </div>
             </div>
         </form>
@@ -60,5 +57,15 @@
     
     .profile_image {
         border-radius: 50%;
+    }
+    
+    .first-letter {
+        height: 35px;
+        width: 35px;
+        text-align: center;
+        position: absolute;
+        border-radius: 50%;
+        padding: 8px;
+        color: #fff;
     }
 </style>
