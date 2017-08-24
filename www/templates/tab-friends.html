@@ -5,17 +5,17 @@
     </ion-nav-buttons>
     <ion-content>
         <div class="row user-snip" ng-repeat="user in vm.users">
-            <div class="col col-72" ng-click="vm.openProfile(user)">
+            <div class="col col-85">
                 <div class="row">
-                    <div class="col col-25">
+                    <div class="col col-25" ng-click="vm.openProfile(user)">
                         <div class="first-letter" ng-style="{'background-color': user.color}">{{user.username.charAt(0)}}</div>
                     </div>
-                    <div class="col col-75">
+                    <div class="col col-75" ng-click="vm.openChat(user)">
                         <span style="font-size: 20px;">{{user.username}}</span>
                     </div>
                 </div>
             </div>
-            <div class="col add col-28 align-right">
+            <div class="col add col-15 align-right">
                 <button type="button" ng-click="vm.remove(user)" class="button button-small button-assertive">Unfriend</button>
             </div>
         </div>

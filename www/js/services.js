@@ -7,8 +7,7 @@
         .factory("Rooms", Rooms)
         .factory("Invite", Invite)
         .factory("Message", Message)
-        .service("UserService", UserService)
-        .service("FacebookService", FacebookService);
+        .service("UserService", UserService);
 
     Auth.$inject = ["$firebaseAuth", "firebase"];
 
@@ -166,7 +165,8 @@
                     email: user.email,
                     friends: [userData.uid],
                     username: user.username,
-                    device_uuid: '' // for push notification
+                    device_uuid: '', // for push notification
+                    color_code: "#" + ((1 << 24) * Math.random() | 0).toString(16)
                 });
                 $ionicLoading.hide();
                 login.call(self, user);
@@ -232,10 +232,12 @@
         };
 
         function addedFriendInList(id, callback) {
-            ref.child('/users/' + this.getProfile().id + '/friends/').once('value', function(snapshot) {
+            var currentUser = this.getProfile();
+
+            ref.child('/users/' + currentUser.id + '/friends/').once('value', function(snapshot) {
                 var data = snapshot.val();
                 data.push(id);
-                ref.child('/users/' + this.getProfile().id + '/friends/').update(data);
+                ref.child('/users/' + currentUser.id + '/friends/').update(data);
                 callback(true);
             });
         };
@@ -279,6 +281,7 @@
         var ref = firebase.database().ref();
         var currentUser = UserService.getProfile();
         var iniviteStatus = [];
+        var color_code = "#" + ((1 << 24) * Math.random() | 0).toString(16);
 
         ref.child('invite').on('value', function(snapshot) {
             snapshot.forEach(function(item) {
@@ -295,6 +298,7 @@
                         from: currentUser.id,
                         to: to.id,
                         read: false,
+                        color_code: color_code,
                         room_id: roomId
                     }).then(function() {
                         UserService.addNotificationToUserProfile(to.id, {
@@ -302,7 +306,7 @@
                             to_id: to.id,
                             from_id: currentUser.id,
                             type: 'Invite',
-                            color: "#" + ((1 << 24) * Math.random() | 0).toString(16),
+                            color_code: color_code,
                             read: false,
                             room_id: roomId,
                             message: currentUser.username + ' sends a invitation to you'
@@ -343,27 +347,4 @@
         };
     }
 
-    FacebookService.$inject = ["$q", "firebase"];
-
-    function FacebookService($q, firebase) {
-        var ref = firebase.database().ref();
-        var deferred = $q.defer();
-        return {
-            login: function() {
-                ref.signInWithPopup("facebook", function(error, authData) {
-                    if (error) {
-                        console.log("Login Failed!", error);
-                        localStorage.clear();
-                    } else {
-                        // the access token will allow us to make Open Graph API calls
-                        // console.log(authData.facebook.accessToken);
-                        deferred.resolve(authData);
-                    }
-                }, {
-                    scope: "email, public_profile" // the permissions requested
-                });
-                return deferred.promise;
-            }
-        }
-    }
 })();
