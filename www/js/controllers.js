@@ -174,7 +174,7 @@
         });
 
         angular.extend(vm, {
-            user: null,
+            currentUser: null,
             newMessage: "",
             messages: [],
             sendMessage: sendMessage,
@@ -187,12 +187,6 @@
             });
         });
 
-        function chatUser() {
-            UserService.getUserProfile($state.params.id, function(data) {
-                vm.user = data
-            });
-        }
-
         function sendMessage(message) {
             if (message) {
                 Message.send($roomId, message).then(function(message) {
@@ -204,7 +198,9 @@
         }
 
         (function() {
-            chatUser();
+            UserService.getUserProfile($state.params.id, function(data) {
+                vm.currentUser = data
+            });
         })();
 
         console.log("Chat controller loading...");

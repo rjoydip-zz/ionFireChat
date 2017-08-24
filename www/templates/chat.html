@@ -11,14 +11,14 @@
     <ion-content has-subheader="false" delegate-handle="chatScroll">
         <div class="chat-content">
             <div class="chat-msg-items">
-                <div class="chat-item" ng-repeat="message in vm.messages track by $index" ng-class="{true: 'me', false: 'you'}[message.sender_email == vm.currentUser.email ]">
+                <div class="chat-item" ng-repeat="message in vm.messages track by $index" ng-class="{true: 'me', false: 'you'}[message.sender_email === vm.currentUser.email]">
                     <!-- <div class="time">11: 20</div> -->
                     <div ng-if="!message.sender_username">
                         <div class="nodatatxt">Welcome</div>
                     </div>
                     <div ng-if="message.sender_username">
                         <div class="user-info">
-                            <div class="first-letter" ng-style="{'background-color': message.color_code}">{{message.sender_username.charAt(0)}}</div>
+                            <div ng-class="{true: 'first-letter-me', false: 'first-letter-you'}[message.sender_email === vm.currentUser.email]" ng-style="{'background-color': message.color_code}">{{message.sender_username.charAt(0)}}</div>
                         </div>
                         <div class="msg-panel">
                             <div class="msg-text">
@@ -59,11 +59,22 @@
         border-radius: 50%;
     }
     
-    .first-letter {
+    .first-letter-me {
+        float: right;
         height: 35px;
         width: 35px;
         text-align: center;
-        position: absolute;
+        border-radius: 50%;
+        padding: 8px;
+        color: #fff;
+    }
+    
+    .first-letter-you {
+        float: left;
+        height: 35px;
+        width: 35px;
+        text-align: center;
+        /*position: absolute;*/
         border-radius: 50%;
         padding: 8px;
         color: #fff;
