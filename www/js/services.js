@@ -117,7 +117,8 @@
             getAddedFriendStatus: getAddedFriendStatus,
             getUserNotificationNumber: getUserNotificationNumber,
             getUserNotifications: getUserNotifications,
-            addNotificationToUserProfile: addNotificationToUserProfile
+            addNotificationToUserProfile: addNotificationToUserProfile,
+            addedFriendInList: addedFriendInList
         }
 
         function trackPresence() {
@@ -249,6 +250,18 @@
             return this.addedFriendsStatus;
         };
 
+        function addedFriendInList(id, callback) {
+            var currentuser = this.getProfile();
+            var myId = (!Boolean(currentuser)) ? userId : currentuser.id;
+
+            ref.child('/users/' + myId + '/friends/').once('value', function(snapshot) {
+                var data = snapshot.val();
+                data.push(id);
+                ref.child('/users/' + myId + '/friends/').update(data);
+                callback(true);
+            });
+        };
+
         function getUserNotificationNumber(callback) {
             var currentuser = this.getProfile();
             var id = (!Boolean(currentuser)) ? userId : currentuser.id;
@@ -270,9 +283,7 @@
                 } else {
                     var updates = {},
                         newItemKey = ref.push().key;
-
                     notiMessage.id = newItemKey;
-
                     updates['/notification/' + newItemKey] = notiMessage;
                     return ref.child('/users/' + id).update(updates);
                 }
@@ -308,7 +319,8 @@
                     }).then(function() {
                         UserService.addNotificationToUserProfile(to.id, {
                             invite_id: newKey,
-                            to_id: currentUser.id,
+                            to_id: to.id,
+                            from_id: currentUser.id,
                             type: 'Invite',
                             color: "#" + ((1 << 24) * Math.random() | 0).toString(16),
                             read: false,
@@ -320,6 +332,20 @@
             },
             getStatus: function(to_id) {
                 return iniviteStatus[to_id] === undefined ? true : iniviteStatus[to_id];
+            },
+            $accept: function(noti_id, callback) {
+                var currentuser = UserService.getProfile()
+                ref.child('/users/' + currentuser.id + '/notification/' + noti_id).once('value', function(snapshot) {
+                    var notiVal = snapshot.val();
+                    ref.child('/invite/' + notiVal.invite_id).remove(function() {
+                        ref.child('/users/' + currentuser.id + '/notification/' + noti_id).remove(function() {
+                            UserService.addedFriendInList(notiVal.from_id, function(status) {
+                                if (status) callback(true);
+                                else callback(false);
+                            });
+                        });
+                    });
+                });
             },
             $remove: function(noti_id, callback) {
                 var currentuser = UserService.getProfile()
@@ -333,7 +359,6 @@
                         });
                     });
                 });
-
             }
         };
     }

@@ -285,8 +285,22 @@
             getNotifications: getNotifications
         });
 
-        function accept() {
-
+        function accept(notifObj, type) {
+            switch (type.toLowerCase()) {
+                case 'invite':
+                    Invite.$accept(notifObj.id, function(status) {
+                        if (status) {
+                            vm.notifications = Object.keys(vm.notifications).filter(function(item) {
+                                return item !== notifObj.id
+                            });
+                            $scope.$apply(); // refreshing UI
+                        }
+                        // show error message
+                    });
+                    break;
+                default:
+                    break;
+            }
         };
 
         function declain(notifObj, type) {
