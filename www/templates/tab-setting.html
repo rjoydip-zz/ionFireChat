@@ -7,13 +7,10 @@
         <div id="profile-bg"></div>
         <div id="content">
             <div id="profile-info">
-                <div id="profile-image">
+                <div id="profile-image" ng-style="{'background-color': vm.user.color_code}">
                     <span>{{vm.user.username.charAt(0)}}</span>
                 </div>
                 <h3 id="profile-name">{{vm.user.username}}</h3>
-                <span id="profile-description">Creator of <a href="https://github.com/Rjoydip/connect2">Connect2</a>
-                    <div>Tweet on <a href="https://twitter.com/rjoydip11">@rjoydip11</a></div>
-                </span>
             </div>
         </div>
         <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
@@ -74,14 +71,13 @@
         width: 128px;
         height: 128px;
         margin: 30px auto 0;
-        background-color: #ef473a;
     }
     
     #profile-image span {
         font-size: 100px;
         position: absolute;
-        left: 43%;
-        top: 30%;
+        left: 41%;
+        top: 35%;
         color: #ffffff;
     }
     

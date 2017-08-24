@@ -11,9 +11,9 @@
         .controller("ProfileCtrl", ProfileCtrl)
         .controller("NotificationCtrl", NotificationCtrl);
 
-    LoginCtrl.$inject = ["$scope", "$ionicModal", "$state", "$firebaseAuth", "$ionicLoading", "$rootScope", "CONFIG", "UserService", "FacebookService"];
+    LoginCtrl.$inject = ["$scope", "$ionicModal", "$state", "$firebaseAuth", "$ionicLoading", "$rootScope", "CONFIG", "UserService"];
 
-    function LoginCtrl($scope, $ionicModal, $state, $firebaseAuth, $ionicLoading, $rootScope, CONFIG, UserService, FacebookService) {
+    function LoginCtrl($scope, $ionicModal, $state, $firebaseAuth, $ionicLoading, $rootScope, CONFIG, UserService) {
 
         var vm = this;
         var ref = firebase.database().ref();
@@ -219,17 +219,24 @@
 
         angular.extend(vm, {
             refresh: refresh,
-            user: UserService.getProfile()
+            user: null
         });
 
+        function getuserDetails() {
+            return vm.user = UserService.getProfile();
+        };
+
         function refresh() {
-            vm.user = UserService.getProfile();
-            if (vm.user) {
+            if (getuserDetails()) {
                 $scope.$broadcast('scroll.refreshComplete');
             } else {
                 $scope.$broadcast('scroll.refreshComplete');
             }
         }
+
+        (function() {
+            getuserDetails();
+        })();
 
         console.log("Settings controller loading...");
     }
