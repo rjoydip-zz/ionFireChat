@@ -15,13 +15,10 @@
             <div class="col col-70 noti-message">
                 {{notification.message}}
             </div>
-            <div ng-if="showload" class="col col-20">
-                <i ng-click="vm.declain(notification,notification.type)" class="button-clear ico-btn ion-loop"></i>
+            <div class="col col-10">
+                <i ng-click="vm.declain(notification,notification.type)" class="button-clear ico-btn ion-android-cancel"></i>
             </div>
-            <div class="col col-10" ng-if="!showload">
-                <i ng-click="vm.declain(notification,notification.type); showload = true" class="button-clear ico-btn ion-android-cancel"></i>
-            </div>
-            <div class="col col-10" ng-if="!showload">
+            <div class="col col-10">
                 <i ng-click="vm.accept(notification,notification.type)" class="button-clear ico-btn ion-android-checkmark-circle"></i>
             </div>
         </div>

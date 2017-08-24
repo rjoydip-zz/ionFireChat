@@ -58,21 +58,22 @@
     function Rooms($firebaseArray, firebase, UserService) {
         var currentUser = UserService.getProfile();
         var ref = firebase.database().ref();
-        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random() * 16 | 0,
-                v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
 
         return {
-            create: function(addUserinfo) {
+            create: function(addUserinfo, callback) {
+                var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random() * 16 | 0,
+                        v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+
                 ref.child('rooms').child(uuid).set({
                     messages: ['Welcome'],
                     myId: currentUser.id,
                     friendId: addUserinfo.id,
-                    device_uuid: '' // for push notification
+                }).then(function() {
+                    callback(uuid);
                 });
-                return uuid;
             },
             getRoomId: function(friendId, callback) {
                 var currentUser = UserService.getProfile();
@@ -167,6 +168,7 @@
                     email: user.email,
                     friends: [userData.uid],
                     username: user.username,
+                    device_uuid: '' // for push notification
                 });
                 $ionicLoading.hide();
                 login.call(self, user);
@@ -295,32 +297,43 @@
 
         return {
             send: function(to) {
-                ref.child('invite').push().set({
-                    from: currentUser.id,
-                    to: to.id,
-                    read: false,
-                    roomId: Rooms.create(to)
-                }).then(function() {
-                    UserService.addNotificationToUserProfile(to.id, {
-                        to_id: currentUser.id,
-                        type: 'Invite',
-                        color: "#" + ((1 << 24) * Math.random() | 0).toString(16),
+                Rooms.create(to, function(roomId) {
+                    var newKey = ref.child('invite').push().key;
+                    ref.child('/invite/' + newKey).set({
+                        id: newKey,
+                        from: currentUser.id,
+                        to: to.id,
                         read: false,
-                        message: currentUser.username + ' sends a invitation to you'
+                        room_id: roomId
+                    }).then(function() {
+                        UserService.addNotificationToUserProfile(to.id, {
+                            invite_id: newKey,
+                            to_id: currentUser.id,
+                            type: 'Invite',
+                            color: "#" + ((1 << 24) * Math.random() | 0).toString(16),
+                            read: false,
+                            room_id: roomId,
+                            message: currentUser.username + ' sends a invitation to you'
+                        });
                     });
                 });
             },
             getStatus: function(to_id) {
                 return iniviteStatus[to_id] === undefined ? true : iniviteStatus[to_id];
             },
-            $remove: function(id, callback) {
-                ref.child('invite').child(id).remove(function(error) {
-                    if (error) {
-                        callback(false);
-                    } else {
-                        callback(true);
-                    }
+            $remove: function(noti_id, callback) {
+                var currentuser = UserService.getProfile()
+                ref.child('/users/' + currentuser.id + '/notification/' + noti_id).once('value', function(snapshot) {
+                    var notiVal = snapshot.val();
+                    ref.child('/invite/' + notiVal.invite_id).remove(function() {
+                        ref.child('/rooms/' + notiVal.room_id).remove(function() {
+                            ref.child('/users/' + currentuser.id + '/notification/' + noti_id).remove(function() {
+                                callback(true);
+                            });
+                        });
+                    });
                 });
+
             }
         };
     }

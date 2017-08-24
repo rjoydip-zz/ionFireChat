@@ -24,8 +24,7 @@
                 email: /^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$/
             },
             createUser: createUser,
-            login: login,
-            // signInWithFaceBook: signInWithFaceBook
+            login: login
         });
 
         $ionicModal.fromTemplateUrl('templates/register.html', {
@@ -291,19 +290,14 @@
         };
 
         function declain(notifObj, type) {
-            vm.showload = true;
-            console.log(1);
             switch (type.toLowerCase()) {
                 case 'invite':
-                    console.log(2);
                     Invite.$remove(notifObj.id, function(status) {
-                        console.log(3);
                         if (status) {
-                            console.log(4);
                             vm.notifications = Object.keys(vm.notifications).filter(function(item) {
                                 return item !== notifObj.id
                             });
-                            console.log(vm.notifications, 5);
+                            $scope.$apply(); // refreshing UI
                         }
                         // show error message
                     });
