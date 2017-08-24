@@ -110,15 +110,12 @@
             getProfile: getProfile,
             trackPresence: trackPresence,
             addToFriendList: addToFriendList,
-            getUserProfileById: getUserProfileById,
-            getFriendProfileById: getFriendProfileById,
-            getAllMyFriendsId: getAllMyFriendsId,
-            setAddedFriendStatus: setAddedFriendStatus,
-            getAddedFriendStatus: getAddedFriendStatus,
+            getUserProfile: getUserProfile,
             getUserNotificationNumber: getUserNotificationNumber,
             getUserNotifications: getUserNotifications,
             addNotificationToUserProfile: addNotificationToUserProfile,
-            addedFriendInList: addedFriendInList
+            addedFriendInList: addedFriendInList,
+            getFriendsId: getFriendsId
         }
 
         function trackPresence() {
@@ -216,30 +213,14 @@
             return user && JSON.parse(user);
         };
 
-        function getUserProfileById(id, callback) {
+        function getUserProfile(id, callback) {
             ref.child('/users/' + id).once('value', function(snapshot) {
                 callback(snapshot.val());
             });
         };
 
-        function getFriendProfileById(id) {
-            var friendProfile = null;
-            ref.child('/users/' + id).once('value', function(snapshot) {
-                friendProfile = snapshot.val();
-            });
-            return friendProfile;
-        };
-
         function getUsers() {
             return $firebaseArray(firebase.database().ref().child('users'));
-        };
-
-        function getAllMyFriendsId(callback) {
-            var currentuser = this.getProfile();
-            var data = this.getProfile().friends.filter(function(item) {
-                return item !== currentuser.id;
-            });
-            callback(data);
         };
 
         function setAddedFriendStatus(data) {
@@ -251,22 +232,22 @@
         };
 
         function addedFriendInList(id, callback) {
-            var currentuser = this.getProfile();
-            var myId = (!Boolean(currentuser)) ? userId : currentuser.id;
-
-            ref.child('/users/' + myId + '/friends/').once('value', function(snapshot) {
+            ref.child('/users/' + this.getProfile().id + '/friends/').once('value', function(snapshot) {
                 var data = snapshot.val();
                 data.push(id);
-                ref.child('/users/' + myId + '/friends/').update(data);
+                ref.child('/users/' + this.getProfile().id + '/friends/').update(data);
                 callback(true);
             });
         };
 
-        function getUserNotificationNumber(callback) {
-            var currentuser = this.getProfile();
-            var id = (!Boolean(currentuser)) ? userId : currentuser.id;
+        function getFriendsId(callback) {
+            ref.child('/users/' + this.getProfile().id + '/friends/').on('value', function(snapshot) {
+                callback(snapshot.val());
+            });
+        };
 
-            ref.child('/users/' + id + '/notification/').on("value", function(snapshot) {
+        function getUserNotificationNumber(callback) {
+            ref.child('/users/' + this.getProfile().id + '/notification/').on("value", function(snapshot) {
                 callback(snapshot.numChildren());
             });
         };
@@ -276,8 +257,7 @@
         };
 
         function addNotificationToUserProfile(id, notiMessage) {
-            var currentuser = this.getProfile()
-            ref.child('/users/' + id).once('value', function(snapshot) {
+            ref.child('/users/' + this.getProfile().id).once('value', function(snapshot) {
                 if (snapshot.hasChild('notification')) {
                     console.log('exists');
                 } else {

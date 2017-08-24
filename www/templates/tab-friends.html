@@ -4,10 +4,19 @@
         <user-logout></user-logout>
     </ion-nav-buttons>
     <ion-content>
-        <div class="row user-snip" ng-repeat="friendId in vm.friendsId">
-            <div class="col img col-20" ng-click="vm.openProfile(vm.getFriendProfileById(friendId).id)"><img height="40" src="img/no_user.png"></div>
-            <div class="col name col-80" ng-click="vm.openChat(vm.getFriendProfileById(friendId))">
-                <span>{{vm.getFriendProfileById(friendId).username}}</span>
+        <div class="row user-snip" ng-repeat="user in vm.users">
+            <div class="col col-72" ng-click="vm.openProfile(user)">
+                <div class="row">
+                    <div class="col col-25">
+                        <div class="first-letter" ng-style="{'background-color': user.color}">{{user.username.charAt(0)}}</div>
+                    </div>
+                    <div class="col col-75">
+                        <span style="font-size: 20px;">{{user.username}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col add col-28 align-right">
+                <button type="button" ng-click="vm.remove(user)" class="button button-small button-assertive">Unfriend</button>
             </div>
         </div>
         <div class="nodatatxt" ng-if="vm.friendsId.length === 0">No friends found</div>
@@ -32,6 +41,17 @@
     
     .user-snip .add {
         margin-top: 5px;
+    }
+    
+    .first-letter {
+        height: 35px;
+        width: 35px;
+        text-align: center;
+        position: absolute;
+        border-radius: 50%;
+        padding: 8px;
+        color: #fff;
+        margin: -5px;
     }
     
     .nodatatxt {

@@ -62,31 +62,24 @@
         var vm = this;
 
         angular.extend(vm, {
-            friendsId: [],
+            users: [],
             refresh: refresh,
             openChat: openChat,
             openProfile: openProfile,
-            setMyFriendId: setMyFriendId,
-            currentUser: UserService.getProfile(),
-            getFriendProfileById: UserService.getFriendProfileById
+            currentUser: UserService.getProfile()
         });
 
-        $scope.$on('$ionicView.afterEnter', function() {
-            vm.setMyFriendId(function(status) {
-                console.log(1, status);
-            });
-
-            if (UserService.getAddedFriendStatus()) {
-                vm.setMyFriendId(function(status) {
-                    console.log(2, status);
+        function getFriends() {
+            UserService.getFriendsId(function(list) {
+                list.forEach(function(item) {
+                    UserService.getUserProfile(item, function(data) {
+                        if (data.id !== vm.currentUser.id) {
+                            data.color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
+                            vm.users.push(data);
+                            console.log(vm.users);
+                        }
+                    });
                 });
-            }
-        });
-
-        function setMyFriendId(callback) {
-            UserService.getAllMyFriendsId(function(ids) {
-                vm.friendsId = ids;
-                callback(true);
             });
         };
 
@@ -95,18 +88,16 @@
         }
 
         function refresh() {
-            console.log(3);
-            vm.setMyFriendId(function(status) {
-                if (status)
-                    $scope.$broadcast('scroll.refreshComplete');
-                else
-                    $scope.$broadcast('scroll.refreshComplete');
-            });
+            $scope.$broadcast('scroll.refreshComplete');
         }
 
         function openProfile(user) {
             $state.go('profile', { id: user.id });
         };
+
+        (function() {
+            getFriends();
+        })();
 
         console.log("Friends controller loading...");
     }
@@ -205,7 +196,7 @@
         });
 
         function chatUser() {
-            UserService.getUserProfileById($state.params.id, function(data) {
+            UserService.getUserProfile($state.params.id, function(data) {
                 vm.user = data
             });
         }
@@ -259,7 +250,7 @@
             user: null
         });
 
-        UserService.getUserProfileById($state.params.id, function(userData) {
+        UserService.getUserProfile($state.params.id, function(userData) {
             vm.user = userData;
         });
 
