@@ -161,6 +161,7 @@
             Auth.$createUserWithEmailAndPassword(user.email, user.password).then(function(userData) {
                 ref.child("users").child(userData.uid).set({
                     id: userData.uid,
+                    bio: user.bio,
                     email: user.email,
                     friends: [userData.uid],
                     username: user.username,

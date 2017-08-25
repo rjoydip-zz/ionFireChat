@@ -43,16 +43,6 @@
             UserService.login(vm.user);
         }
 
-        function signInWithFaceBook() {
-            FacebookService.login().then(function(userData) {
-                ref.child("users").child(userData.uid).set({
-                    id: userData.uid,
-                    email: userData.facebook.email,
-                    username: userData.facebook.displayName
-                });
-                $state.go('tab.users');
-            });
-        }
         console.log("Login controller loading...");
     }
 

@@ -1,25 +1,31 @@
 <ion-modal-view>
     <ion-header-bar class="bar bar-header bar-assertive">
         <h1 class="title">Create New Account</h1>
-        <button class="button button-clear button-assertive" ng-click="vm.modal.hide()">Cancel</button>
+        <button class="button button-clear button-icon ion-ios-close-empty" ng-click="vm.modal.hide()"></button>
     </ion-header-bar>
-    <ion-content class="padding">
-        <div class="list">
-            <form name="signUpForm">
-                <label class="item item-input">
-          <span class="input-label">Email Address</span>
-          <input ng-model="vm.user.email" type="text" ng-required="required">
-        </label>
-                <label class="item item-input">
-          <span class="input-label">Passsword</span>
-          <input ng-model="vm.user.password" type="password" ng-required="required">
-        </label>
-                <label class="item item-input">
-          <span class="input-label">Display Name</span>
-          <input ng-model="vm.user.username" type="text" ng-required="required">
-        </label>
-                <button class="button button-full button-assertive" ng-disabled="!signUpForm.$valid" ng-click="vm.createUser()">Create</button>
-            </form>
-        </div>
+    <ion-content>
+        <form name="signUpForm">
+            <div class="list">
+                <label class="item item-input item-stacked-label">
+                        <span class="input-label">Username</span>
+                    <input type="text" ng-model="vm.user.username" required/>
+                </label>
+                <label class="item item-input item-stacked-label">
+                        <span class="input-label">Email</span>
+                    <input type="email" ng-model="vm.user.email" ng-pattern="vm.pattern.email" required/>
+                </label>
+                <label class="item item-input item-stacked-label">
+                        <span class="input-label">Password</span>
+                    <input type="password" ng-minlength="6" ng-model="vm.user.password" ng-pattern="vm.pattern.password" required/>
+                </label>
+
+                <label class="item item-input item-stacked-label">
+                    <span class="input-label">Bio</span>
+                    <textarea type="text" ng-model="vm.user.bio" row=5 ></textarea>
+                </label>
+
+            </div>
+            <button class="button button-full button-assertive" ng-disabled="!signUpForm.$valid" ng-click="vm.createUser()">Create</button>
+        </form>
     </ion-content>
 </ion-modal-view>
