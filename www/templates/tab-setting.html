@@ -27,6 +27,11 @@
                 <input type="text" ng-model="vm.user.email" placeholder="" readonly/>
             </label>
 
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Bio</span>
+                <textarea type="text" ng-model="vm.user.bio" row=5 placeholder=""></textarea>
+            </label>
+
             <button class="button button-full button-assertive btn-update">Update</button>
         </div>
         <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
@@ -44,6 +49,14 @@
     .item-input textarea {
         border-bottom: 1px solid #ccc;
         width: 96%;
+    }
+    
+    .item-stacked-label input,
+    .item-stacked-label textarea {
+        height: 75px;
+        resize: none;
+        padding: 4px 8px 3px 6px;
+        border-bottom: 2px solid #ccc;
     }
     
     .btn-update {

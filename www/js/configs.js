@@ -13,6 +13,9 @@
 
     angular
         .module('configs', [])
+        .config(['$ionicConfigProvider', function($ionicConfigProvider) {
+            $ionicConfigProvider.tabs.position('bottom'); // other values: top
+        }])
         .constant("CONFIG", {
             "FIREBASE_URL": firebaseConfig.databaseURL
         });
