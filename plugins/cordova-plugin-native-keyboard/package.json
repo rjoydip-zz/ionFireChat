@@ -1,0 +1,105 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "cordova-plugin-native-keyboard",
+        "scope": null,
+        "escapedName": "cordova-plugin-native-keyboard",
+        "name": "cordova-plugin-native-keyboard",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "D:\\Applications\\ionic1\\ionFireChat\\node_modules"
+    ]
+  ],
+  "_from": "cordova-plugin-native-keyboard@latest",
+  "_id": "cordova-plugin-native-keyboard@1.4.3",
+  "_inCache": true,
+  "_location": "/cordova-plugin-native-keyboard",
+  "_nodeVersion": "6.10.3",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/cordova-plugin-native-keyboard-1.4.3.tgz_1502624529443_0.3965805545449257"
+  },
+  "_npmUser": {
+    "name": "eddyverbruggen",
+    "email": "eddyverbruggen@gmail.com"
+  },
+  "_npmVersion": "3.10.10",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "cordova-plugin-native-keyboard",
+    "scope": null,
+    "escapedName": "cordova-plugin-native-keyboard",
+    "name": "cordova-plugin-native-keyboard",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-native-keyboard/-/cordova-plugin-native-keyboard-1.4.3.tgz",
+  "_shasum": "1598c44755011fd613851f6d280769b9311c5c4b",
+  "_shrinkwrap": null,
+  "_spec": "cordova-plugin-native-keyboard",
+  "_where": "D:\\Applications\\ionic1\\ionFireChat\\node_modules",
+  "author": {
+    "name": "Eddy Verbruggen",
+    "email": "eddyverbruggen@gmail.com",
+    "url": "https://github.com/EddyVerbruggen"
+  },
+  "bugs": {
+    "url": "https://github.com/EddyVerbruggen/cordova-plugin-native-keyboard/issues"
+  },
+  "cordova": {
+    "id": "cordova-plugin-native-keyboard",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
+  "dependencies": {},
+  "description": "This plugin aims to solve common keyboard problems encountered with Cordova / PhoneGap apps. The messenger component (see screenshots) is ready for production, but this plugin will have more tricks up its sleeve. I'll document those once they're ready for",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "1598c44755011fd613851f6d280769b9311c5c4b",
+    "tarball": "https://registry.npmjs.org/cordova-plugin-native-keyboard/-/cordova-plugin-native-keyboard-1.4.3.tgz"
+  },
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "gitHead": "95de848634990a6dfd0fd1b29b46cf286a969a03",
+  "homepage": "https://github.com/EddyVerbruggen/cordova-plugin-native-keyboard#readme",
+  "keywords": [
+    "Keyboard",
+    "Native Keyboard",
+    "Messenger",
+    "Messenger Keyboard",
+    "ecosystem:cordova",
+    "cordova-ios",
+    "cordova-android"
+  ],
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "eddyverbruggen",
+      "email": "eddyverbruggen@gmail.com"
+    }
+  ],
+  "name": "cordova-plugin-native-keyboard",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EddyVerbruggen/cordova-plugin-native-keyboard.git"
+  },
+  "scripts": {},
+  "version": "1.4.3"
+}
