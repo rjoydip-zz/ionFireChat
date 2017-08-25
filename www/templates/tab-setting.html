@@ -19,7 +19,7 @@
         <div class="list">
             <label class="item item-input item-stacked-label">
                 <span class="input-label">Username</span>
-                <input type="text" ng-model="vm.user.username" placeholder="" />
+                <input type="text" ng-model="vm.user.username"/>
             </label>
 
             <label class="item item-input item-stacked-label">
@@ -29,10 +29,10 @@
 
             <label class="item item-input item-stacked-label">
                 <span class="input-label">Bio</span>
-                <textarea type="text" ng-model="vm.user.bio" row=5 placeholder=""></textarea>
+                <textarea type="text" ng-model="vm.user.bio" row=5></textarea>
             </label>
 
-            <button class="button button-full button-assertive btn-update">Update</button>
+            <button class="button button-full button-assertive">Update</button>
         </div>
         <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
     </ion-content>
