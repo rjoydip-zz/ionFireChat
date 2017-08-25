@@ -15,6 +15,7 @@
         .module('configs', [])
         .config(['$ionicConfigProvider', function($ionicConfigProvider) {
             $ionicConfigProvider.tabs.position('bottom'); // other values: top
+            $ionicConfigProvider.views.maxCache(0); // cache less view
         }])
         .constant("CONFIG", {
             "FIREBASE_URL": firebaseConfig.databaseURL
