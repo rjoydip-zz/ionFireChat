@@ -1,4 +1,5 @@
-<ion-tabs class="tabs-icon-top tabs-color-active-assertive">
+<!--<ion-tabs class="tabs-icon-top tabs-color-assertive tabs-color-active-assertive">-->
+<ion-tabs class="tabs-icon-top">
 
     <!-- Rooms List Tab -->
     <ion-tab title="Add friends" icon-off="ion-ios-people-outline" icon-on="ion-ios-people" href="#/tab/users">
@@ -15,3 +16,33 @@
         <ion-nav-view name="tab-setting"></ion-nav-view>
     </ion-tab>
 </ion-tabs>
+
+<style>
+    .tabs {
+        background-color: #ef473a;
+    }
+    
+    .tabs-striped .tab {
+        padding-top: 1px;
+        border-bottom: 1px solid #000000;
+    }
+    
+    .tab-item .icon {
+        height: 28px;
+    }
+    
+    .tabs-icon-top>.tabs .tab-item,
+    .tabs-icon-top.tabs .tab-item,
+    .tabs-icon-bottom>.tabs .tab-item,
+    .tabs-icon-bottom.tabs .tab-item {
+        color: #fff;
+    }
+    
+    .tabs-striped .tab-item.tab-item-active,
+    .tabs-striped .tab-item.active,
+    .tabs-striped .tab-item.activated {
+        margin-top: -1px;
+        border-width: 0 0px 4px 0;
+        border-color: #ffffff;
+    }
+</style>
