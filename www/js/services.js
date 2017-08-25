@@ -423,7 +423,7 @@
         return {
             root: function(callback) {
                 ref.child('users').on('child_changed', function(snapshot) {
-                    if (snapshot.val()) callback(true);
+                    if (snapshot.val()) callback(snapshot.val());
                     else callback(false);
                 });
             }

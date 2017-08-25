@@ -165,9 +165,9 @@
         console.log("Users controller loading...");
     };
 
-    ChatCtrl.$inject = ['$scope', '$state', '$ionicScrollDelegate', '$rootScope', 'Message', "UserService", "Rooms"];
+    ChatCtrl.$inject = ['$scope', '$state', '$ionicScrollDelegate', '$rootScope', 'Message', "UserService", "Rooms", "FirebaseChildEvent"];
 
-    function ChatCtrl($scope, $state, $ionicScrollDelegate, $rootScope, Message, UserService, Rooms) {
+    function ChatCtrl($scope, $state, $ionicScrollDelegate, $rootScope, Message, UserService, Rooms, FirebaseChildEvent) {
         var vm = this;
         var $roomId = null;
 
@@ -206,22 +206,27 @@
             });
         })();
 
+        FirebaseChildEvent.root(function(status) {
+            console.log("Firebase reference update status -> " + status + " from chat controller");
+        });
+
         console.log("Chat controller loading...");
     }
 
-    AccountsCtrl.$inject = ['$scope', "$state", "$rootScope", "UserService"];
+    AccountsCtrl.$inject = ['$scope', "$state", "$rootScope", "UserService", "FirebaseChildEvent"];
 
-    function AccountsCtrl($scope, $state, $rootScope, UserService) {
+    function AccountsCtrl($scope, $state, $rootScope, UserService, FirebaseChildEvent) {
         var vm = this;
 
         angular.extend(vm, {
             refresh: refresh,
             user: null,
-            update: update
+            update: update,
+            getuserDetails: getuserDetails
         });
 
         $scope.$on('$ionicView.afterEnter', function() {
-            getuserDetails();
+            vm.getuserDetails();
         });
 
         function update(user) {
@@ -232,25 +237,33 @@
 
         function getuserDetails() {
             vm.user = null;
-            return vm.user = UserService.getProfile();
+            vm.user = UserService.getProfile();
+            return vm.user;
         };
 
         function refresh() {
-            if (getuserDetails()) {
+            if (vm.getuserDetails()) {
                 $scope.$broadcast('scroll.refreshComplete');
             }
         };
 
         (function() {
-            getuserDetails();
+            vm.getuserDetails();
         })();
+
+        FirebaseChildEvent.root(function(status) {
+            console.log("Firebase reference update status -> " + status + " from settings controller");
+            vm.user = status;
+            $scope.$apply();
+            console.log(status);
+        });
 
         console.log("Settings controller loading...");
     }
 
-    ProfileCtrl.$inject = ['$scope', "$state", "$rootScope", "UserService"];
+    ProfileCtrl.$inject = ['$scope', "$state", "$rootScope", "UserService", "FirebaseChildEvent"];
 
-    function ProfileCtrl($scope, $state, $rootScope, UserService) {
+    function ProfileCtrl($scope, $state, $rootScope, UserService, FirebaseChildEvent) {
         var vm = this;
 
         // back button enable on this page
@@ -259,19 +272,42 @@
         });
 
         angular.extend(vm, {
-            user: null
+            user: null,
+            refresh: refresh
         });
 
-        UserService.getUserProfile($state.params.id, function(userData) {
-            vm.user = userData;
+        function getProfileData() {
+            vm.user = null;
+            UserService.getUserProfile($state.params.id, function(userData) {
+                vm.user = userData;
+                $scope.$apply();
+            });
+            return this;
+        };
+
+        function refresh() {
+            if (getProfileData()) {
+                $scope.$broadcast('scroll.refreshComplete');
+            } else {
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+        };
+
+        (function() {
+            getProfileData();
+        })();
+
+        FirebaseChildEvent.root(function(status) {
+            console.log("Firebase reference update status -> " + status + " from profile controller");
+            getProfileData();
         });
 
         console.log("Profile controller loading...");
     }
 
-    NotificationCtrl.$inject = ['$scope', "$state", "$rootScope", "UserService", "Invite"];
+    NotificationCtrl.$inject = ['$scope', "$state", "$rootScope", "UserService", "Invite", "FirebaseChildEvent"];
 
-    function NotificationCtrl($scope, $state, $rootScope, UserService, Invite) {
+    function NotificationCtrl($scope, $state, $rootScope, UserService, Invite, FirebaseChildEvent) {
         var vm = this;
 
         // back button enable on this page
@@ -361,6 +397,10 @@
         (function() {
             vm.getNotifications();
         })();
+
+        FirebaseChildEvent.root(function(status) {
+            console.log("Firebase reference update status -> " + status + " from notification controller");
+        });
 
         console.log("Notification controller loading...");
     }
