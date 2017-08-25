@@ -7,7 +7,7 @@
         .controller("LoginCtrl", LoginCtrl)
         .controller("UsersCtrl", UsersCtrl)
         .controller("FriendsCtrl", FriendsCtrl)
-        .controller("SettingCtrl", SettingCtrl)
+        .controller("AccountsCtrl", AccountsCtrl)
         .controller("ProfileCtrl", ProfileCtrl)
         .controller("NotificationCtrl", NotificationCtrl);
 
@@ -196,9 +196,9 @@
         console.log("Chat controller loading...");
     }
 
-    SettingCtrl.$inject = ['$scope', "$state", "UserService"];
+    AccountsCtrl.$inject = ['$scope', "$state", "UserService"];
 
-    function SettingCtrl($scope, $state, UserService) {
+    function AccountsCtrl($scope, $state, UserService) {
         var vm = this;
 
         angular.extend(vm, {

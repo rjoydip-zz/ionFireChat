@@ -54,12 +54,12 @@ angular.module('routes', [])
         }
     })
 
-    .state('tab.setting', {
-        url: '/setting',
+    .state('tab.accounts', {
+        url: '/accounts',
         views: {
-            'tab-setting': {
-                templateUrl: 'templates/tab-setting.html',
-                controller: 'SettingCtrl as vm'
+            'tab-accounts': {
+                templateUrl: 'templates/tab-accounts.html',
+                controller: 'AccountsCtrl as vm'
             }
         }
     })

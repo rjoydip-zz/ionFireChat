@@ -1,4 +1,4 @@
-<ion-view view-title="Profile">
+<ion-view view-title="Account">
     <ion-nav-buttons side="right">
         <user-notification></user-notification>
         <user-logout></user-logout>
@@ -10,20 +10,28 @@
                 <div id="profile-image" ng-style="{'background-color': vm.user.color_code}">
                     <span>{{vm.user.username.charAt(0)}}</span>
                 </div>
-                <h3 id="profile-name">{{vm.user.username}}</h3>
+                <div id="profile-name">{{vm.user.username}}</div>
             </div>
         </div>
+
         <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
     </ion-content>
 </ion-view>
 
 <style>
+    .btn-update {
+        margin-top: 30px !important;
+        width: 93% !important;
+        margin-left: 15px;
+    }
+    
     #profile-bg {
         position: fixed;
         left: 0;
-        top: -150px;
+        z-index: 2;
+        top: -100px;
         width: 100%;
-        height: 170px;
+        height: 250px;
         background: #ef473a;
         /* For browsers that do not support gradients */
         background: -webkit-linear-gradient(#ef473a, #ffffff);
@@ -38,10 +46,9 @@
     
     #content {
         position: relative;
-        margin-top: 130px;
+        margin-top: 100px;
         background-color: white;
-        box-shadow: 0px -1px 1px rgba(0, 0, 0, 0.2);
-        padding-top: 175px;
+        padding-top: 130px;
     }
     
     #profile-info {
@@ -53,8 +60,10 @@
     }
     
     #profile-name {
-        color: #444;
-        font-size: 20px;
+        color: #e42112;
+        padding: 20px;
+        font-weight: 400;
+        font-size: 35px;
     }
     
     #profile-description {
@@ -71,13 +80,13 @@
         width: 128px;
         height: 128px;
         margin: 30px auto 0;
-        background-color: #ef473a;
+        border: 2px solid #3eca39;
     }
     
     #profile-image span {
-        font-size: 100px;
+        font-size: 60px;
         position: absolute;
-        left: 41.5%;
+        left: 44%;
         top: 35%;
         color: #ffffff;
     }

@@ -1,4 +1,4 @@
-<ion-view view-title="Settings">
+<ion-view view-title="Account">
     <ion-nav-buttons side="right">
         <user-notification></user-notification>
         <user-logout></user-logout>
@@ -9,9 +9,6 @@
             <div id="profile-info">
                 <div id="profile-image" ng-style="{'background-color': vm.user.color_code}">
                     <span>{{vm.user.username.charAt(0)}}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-                        <circle cx="100" cy="112" r="10" stroke="#217f1e" stroke-width="1" fill="#217f1e"/>
-                    </svg>
                 </div>
                 <div id="profile-name">{{vm.user.username}}</div>
             </div>
@@ -100,13 +97,13 @@
         width: 128px;
         height: 128px;
         margin: 30px auto 0;
-        border: 2px solid #217f1e;
+        border: 2px solid #3eca39;
     }
     
     #profile-image span {
-        font-size: 100px;
+        font-size: 60px;
         position: absolute;
-        left: 41.5%;
+        left: 44%;
         top: 35%;
         color: #ffffff;
     }
