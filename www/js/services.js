@@ -114,7 +114,8 @@
             getUserNotifications: getUserNotifications,
             addNotificationToUserProfile: addNotificationToUserProfile,
             addedFriendInList: addedFriendInList,
-            getFriendsId: getFriendsId
+            getFriendsId: getFriendsId,
+            unFriend: unFriend
         }
 
         function trackPresence() {
@@ -286,6 +287,15 @@
                     return ref.child('/users/' + id).update(updates);
                 }
             });
+        };
+
+        function unFriend(id) {
+            /**
+             * :::::::::: TODO ::::::::::
+             * delete from my friends array and also from removed friemds array
+             * delete room
+             * sends notification to that user 
+             */
         };
 
     };
