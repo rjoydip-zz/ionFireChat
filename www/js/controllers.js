@@ -94,6 +94,10 @@
             getFriends();
         })();
 
+        $rootScope.$on('refresh', function() {
+            console.log("Event listened in friends controller");
+        });
+
         console.log("Friends controller loading...");
     }
 
@@ -156,6 +160,10 @@
             $state.go('profile', { id: user.id });
         };
 
+        $rootScope.$on('refresh', function() {
+            console.log("Event listened in users controller");
+        });
+
         console.log("Users controller loading...");
     };
 
@@ -200,12 +208,16 @@
             });
         })();
 
+        $rootScope.$on('refresh', function() {
+            console.log("Event listened in chat controller");
+        });
+
         console.log("Chat controller loading...");
     }
 
-    AccountsCtrl.$inject = ['$scope', "$state", "UserService"];
+    AccountsCtrl.$inject = ['$scope', "$state", "$rootScope", "UserService"];
 
-    function AccountsCtrl($scope, $state, UserService) {
+    function AccountsCtrl($scope, $state, $rootScope, UserService) {
         var vm = this;
 
         angular.extend(vm, {
@@ -216,6 +228,8 @@
 
         $scope.$on('$ionicView.afterEnter', function() {
             getuserDetails();
+            console.log("*******");
+            $rootScope.$broadcast('refresh');
         });
 
         function update(user) {
@@ -242,9 +256,9 @@
         console.log("Settings controller loading...");
     }
 
-    ProfileCtrl.$inject = ['$scope', "$state", "UserService"];
+    ProfileCtrl.$inject = ['$scope', "$state", "$rootScope", "UserService"];
 
-    function ProfileCtrl($scope, $state, UserService) {
+    function ProfileCtrl($scope, $state, $rootScope, UserService) {
         var vm = this;
 
         // back button enable on this page
@@ -260,12 +274,16 @@
             vm.user = userData;
         });
 
+        $rootScope.$on('refresh', function() {
+            console.log("Event listened in profile controller");
+        });
+
         console.log("Profile controller loading...");
     }
 
-    NotificationCtrl.$inject = ['$scope', "$state", "UserService", "Invite"];
+    NotificationCtrl.$inject = ['$scope', "$state", "$rootScope", "UserService", "Invite"];
 
-    function NotificationCtrl($scope, $state, UserService, Invite) {
+    function NotificationCtrl($scope, $state, $rootScope, UserService, Invite) {
         var vm = this;
 
         // back button enable on this page
@@ -338,6 +356,10 @@
             vm.getNotifications();
         })();
 
-        console.log("Profile controller loading...");
+        $rootScope.$on('refresh', function() {
+            console.log("Event listened in notification controller");
+        });
+
+        console.log("Notification controller loading...");
     }
 })();

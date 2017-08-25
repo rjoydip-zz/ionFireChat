@@ -7,7 +7,7 @@
             <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
         </ion-nav-buttons>
     </ion-header-bar>
-    <ion-content has-subheader="false">
+    <ion-content has-subheader="false" ng-init="lenNoti = vm.notifications.length">
         <div class="row" ng-repeat="notification in vm.notifications">
             <div class="col col-10">
                 <div class="first-letter" ng-style="{'background-color': notification.color_code}">{{notification.type.toUpperCase().charAt(0)}}</div>
@@ -22,6 +22,7 @@
                 <i ng-click="vm.accept(notification,notification.type)" class="button-clear ico-btn ion-android-checkmark-circle"></i>
             </div>
         </div>
+        <div class="nodatatxt" ng-if="lenNoti === 0">No notifications found</div>
         <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
     </ion-content>
 </ion-view>

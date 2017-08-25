@@ -24,7 +24,7 @@
                     UserService.logout();
                 }
 
-                console.log("Logout directive working");
+                // console.log("Logout directive working");
             }
         }
     }
@@ -65,7 +65,7 @@
                     vm.getNosNotification();
                 })();
 
-                console.log("Notification directive working");
+                // console.log("Notification directive working");
             }
         }
     }
