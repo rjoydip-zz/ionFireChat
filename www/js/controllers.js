@@ -54,6 +54,7 @@
         angular.extend(vm, {
             users: [],
             refresh: refresh,
+            unfriend: unfriend,
             openChat: openChat,
             openProfile: openProfile,
             currentUser: UserService.getProfile()
@@ -68,6 +69,12 @@
                         }
                     });
                 });
+            });
+        };
+
+        function unfriend(user) {
+            UserService.$unFriend(user.id, function(status) {
+                // console.log(status);
             });
         };
 

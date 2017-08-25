@@ -85,7 +85,12 @@
                         }
                     });
                 });
-
+            },
+            removeRoom: function(roomId, callback) {
+                ref.child('/rooms/' + roomId).remove(function(error) {
+                    if (error) callback(false);
+                    else callback(true);
+                });
             }
         }
     }
@@ -115,7 +120,7 @@
             addNotificationToUserProfile: addNotificationToUserProfile,
             addedFriendInList: addedFriendInList,
             getFriendsId: getFriendsId,
-            unFriend: unFriend
+            $unFriend: $unFriend
         }
 
         function trackPresence() {
@@ -289,13 +294,48 @@
             });
         };
 
-        function unFriend(id) {
+        function $unFriend(user_id, callback) {
             /**
              * :::::::::: TODO ::::::::::
              * delete from my friends array and also from removed friemds array
              * delete room
              * sends notification to that user 
              */
+
+            var currentUser = this.getProfile();
+
+            ref.child('/users/' + currentUser.id + '/friends/').once('value', function(snapshot1) {
+                var data1 = snapshot1.val().filter(function(item) {
+                    return item !== user_id;
+                });
+                // console.log("Data 1", data1);
+
+                ref.child('/users/' + user_id + '/friends/').once('value', function(snapshot2) {
+                    var data2 = snapshot2.val().filter(function(item) {
+                        return item !== currentUser.id;
+                    });
+                    // console.log("Data 2", data2);
+
+                    ref.child('rooms').once('value', function(snapshot) {
+                        snapshot.forEach(function(item) {
+                            if (
+                                (item.val().friendId === user_id && item.val().myId === currentUser.id) ||
+                                (item.val().friendId === currentUser.id && item.val().myId === user_id)
+                            ) {
+                                console.log(item.key);
+                                ref.child('/rooms/' + item.key).remove(function(error) {
+                                    if (error) callback(false);
+                                    ref.child('/users/' + user_id + '/friends/').set(data2);
+                                    ref.child('/users/' + currentUser.id + '/friends/').set(data1);
+                                    callback(true);
+                                });
+                            }
+                        });
+                    });
+
+                    callback(true);
+                });
+            });
         };
 
     };
