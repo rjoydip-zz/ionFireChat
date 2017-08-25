@@ -53,11 +53,18 @@
 
         angular.extend(vm, {
             users: [],
+            show: false,
             refresh: refresh,
             unfriend: unfriend,
             openChat: openChat,
             openProfile: openProfile,
             currentUser: UserService.getProfile()
+        });
+
+
+        $scope.$on('$ionicView.afterEnter', function() {
+            vm.users = [];
+            getFriends();
         });
 
         function getFriends() {
@@ -74,7 +81,9 @@
 
         function unfriend(user) {
             UserService.$unFriend(user.id, function(status) {
-                // console.log(status);
+                if (status) {
+                    vm.users.slice(vm.users.indexOf(user), 1);
+                }
             });
         };
 
@@ -94,16 +103,12 @@
             getFriends();
         })();
 
-        $rootScope.$on('refresh', function() {
-            console.log("Event listened in friends controller");
-        });
-
         console.log("Friends controller loading...");
     }
 
-    UsersCtrl.$inject = ['$scope', "$state", "$timeout", "$rootScope", "UserService", "Rooms", "Invite"];
+    UsersCtrl.$inject = ['$scope', "$state", "$timeout", "$rootScope", "UserService", "Rooms", "Invite", "FirebaseChildEvent"];
 
-    function UsersCtrl($scope, $state, $timeout, $rootScope, UserService, Rooms, Invite) {
+    function UsersCtrl($scope, $state, $timeout, $rootScope, UserService, Rooms, Invite, FirebaseChildEvent) {
         var vm = this;
 
         angular.extend(vm, {
@@ -113,14 +118,6 @@
             invite: invite,
             openProfile: openProfile,
             currentUser: null
-        });
-
-        $scope.$on('$ionicView.afterEnter', function() {
-            vm.getUsers(function(status) {
-                if (status) {
-
-                }
-            });
         });
 
         function getUsers(callback) {
@@ -160,8 +157,9 @@
             $state.go('profile', { id: user.id });
         };
 
-        $rootScope.$on('refresh', function() {
-            console.log("Event listened in users controller");
+        FirebaseChildEvent.root(function(status) {
+            console.log("Firebase reference update status -> " + status + " from users controller");
+            vm.refresh();
         });
 
         console.log("Users controller loading...");
@@ -208,10 +206,6 @@
             });
         })();
 
-        $rootScope.$on('refresh', function() {
-            console.log("Event listened in chat controller");
-        });
-
         console.log("Chat controller loading...");
     }
 
@@ -228,8 +222,6 @@
 
         $scope.$on('$ionicView.afterEnter', function() {
             getuserDetails();
-            console.log("*******");
-            $rootScope.$broadcast('refresh');
         });
 
         function update(user) {
@@ -274,10 +266,6 @@
             vm.user = userData;
         });
 
-        $rootScope.$on('refresh', function() {
-            console.log("Event listened in profile controller");
-        });
-
         console.log("Profile controller loading...");
     }
 
@@ -303,12 +291,21 @@
         function accept(notifObj, type) {
             switch (type.toLowerCase()) {
                 case 'invite':
-                    Invite.$accept(notifObj.id, function(status) {
+                    Invite.$accept(notifObj.invite_id, function(status) {
                         if (status) {
                             vm.notifications = Object.keys(vm.notifications).filter(function(item) {
-                                return item !== notifObj.id
+                                return item !== notifObj.invite_id
                             });
-                            $scope.$apply(); // refreshing UI
+                        }
+                        // show error message
+                    });
+                    break;
+                case 'unfriend':
+                    Invite.updateStatus(notifObj.invite_id, function(status) {
+                        if (status) {
+                            vm.notifications = Object.keys(vm.notifications).filter(function(item) {
+                                return item !== notifObj.invite_id
+                            });
                         }
                         // show error message
                     });
@@ -321,16 +318,25 @@
         function declain(notifObj, type) {
             switch (type.toLowerCase()) {
                 case 'invite':
-                    Invite.$remove(notifObj.id, function(status) {
+                    Invite.remove(notifObj.invite_id, function(status) {
                         if (status) {
                             vm.notifications = Object.keys(vm.notifications).filter(function(item) {
-                                return item !== notifObj.id
+                                return item !== notifObj.invite_id
                             });
                             $scope.$apply(); // refreshing UI
                         }
                         // show error message
                     });
                     break;
+                case 'unfriend':
+                    Invite.updateStatus(notifObj.invite_id, function(status) {
+                        if (status) {
+                            vm.notifications = Object.keys(vm.notifications).filter(function(item) {
+                                return item !== notifObj.invite_id
+                            });
+                        }
+                        // show error message
+                    });
                 default:
                     break;
             }
@@ -355,10 +361,6 @@
         (function() {
             vm.getNotifications();
         })();
-
-        $rootScope.$on('refresh', function() {
-            console.log("Event listened in notification controller");
-        });
 
         console.log("Notification controller loading...");
     }

@@ -29,9 +29,9 @@
         }
     }
 
-    userNotification.$inject = ["$state", "UserService"];
+    userNotification.$inject = ["$state", "UserService", "FirebaseChildEvent"];
 
-    function userNotification($state, UserService) {
+    function userNotification($state, UserService, FirebaseChildEvent) {
         return {
             restrict: 'EA',
             template: '<button style="font-size: 20px;" class="button button-ion ion-android-notifications notifi" ng-click="goNotification()"></button>' +
@@ -64,6 +64,11 @@
                 (function() {
                     vm.getNosNotification();
                 })();
+
+                FirebaseChildEvent.root(function(status) {
+                    console.log("Firebase reference update status -> " + status + " from notification directive");
+                    vm.getNosNotification();
+                });
 
                 // console.log("Notification directive working");
             }

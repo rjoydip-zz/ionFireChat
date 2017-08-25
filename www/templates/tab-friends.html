@@ -19,7 +19,7 @@
                 <button type="button" ng-click="vm.unfriend(user)" class="button button-small button-assertive">Unfriend</button>
             </div>
         </div>
-        <div class="nodatatxt" ng-if="vm.friendsId.length === 0">No friends found</div>
+        <div class="nodatatxt" ng-if="vm.users.length === 0">No friends found</div>
         <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
     </ion-content>
 </ion-view>

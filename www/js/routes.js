@@ -44,10 +44,10 @@ angular.module('routes', [])
         }
     })
 
-    .state('tab.chats', {
-        url: '/chats',
+    .state('tab.friends', {
+        url: '/friends',
         views: {
-            'tab-chats': {
+            'tab-friends': {
                 templateUrl: 'templates/tab-friends.html',
                 controller: 'FriendsCtrl as vm'
             }

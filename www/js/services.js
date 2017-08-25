@@ -7,7 +7,8 @@
         .factory("Rooms", Rooms)
         .factory("Invite", Invite)
         .factory("Message", Message)
-        .service("UserService", UserService);
+        .service("UserService", UserService)
+        .service("FirebaseChildEvent", FirebaseChildEvent);
 
     Auth.$inject = ["$firebaseAuth", "firebase"];
 
@@ -238,14 +239,6 @@
             return $firebaseArray(firebase.database().ref().child('users'));
         };
 
-        function setAddedFriendStatus(data) {
-            this.addedFriendsStatus = data;
-        };
-
-        function getAddedFriendStatus(data) {
-            return this.addedFriendsStatus;
-        };
-
         function addedFriendInList(id, callback) {
             var currentUser = this.getProfile();
 
@@ -271,8 +264,14 @@
         };
 
         function getUserNotificationNumber(callback) {
+            var count = 0;
             ref.child('/users/' + this.getProfile().id + '/notification/').on("value", function(snapshot) {
-                callback(snapshot.numChildren());
+                snapshot.forEach(function(item) {
+                    if (!item.val().read) {
+                        count++;
+                    }
+                });
+                callback(count);
             });
         };
 
@@ -282,51 +281,46 @@
 
         function addNotificationToUserProfile(id, notiMessage) {
             ref.child('/users/' + this.getProfile().id).once('value', function(snapshot) {
-                if (snapshot.hasChild('notification')) {
-                    console.log('exists');
-                } else {
-                    var updates = {},
-                        newItemKey = ref.push().key;
-                    notiMessage.id = newItemKey;
-                    updates['/notification/' + newItemKey] = notiMessage;
-                    return ref.child('/users/' + id).update(updates);
-                }
+                var updates = {},
+                    newItemKey = ref.push().key;
+                notiMessage.id = newItemKey;
+                updates['/notification/' + newItemKey] = notiMessage;
+                return ref.child('/users/' + id).update(updates);
             });
         };
 
         function $unFriend(user_id, callback) {
-            /**
-             * :::::::::: TODO ::::::::::
-             * delete from my friends array and also from removed friemds array
-             * delete room
-             * sends notification to that user 
-             */
-
             var currentUser = this.getProfile();
 
             ref.child('/users/' + currentUser.id + '/friends/').once('value', function(snapshot1) {
                 var data1 = snapshot1.val().filter(function(item) {
                     return item !== user_id;
                 });
-                // console.log("Data 1", data1);
-
                 ref.child('/users/' + user_id + '/friends/').once('value', function(snapshot2) {
                     var data2 = snapshot2.val().filter(function(item) {
                         return item !== currentUser.id;
                     });
-                    // console.log("Data 2", data2);
-
                     ref.child('rooms').once('value', function(snapshot) {
                         snapshot.forEach(function(item) {
                             if (
                                 (item.val().friendId === user_id && item.val().myId === currentUser.id) ||
                                 (item.val().friendId === currentUser.id && item.val().myId === user_id)
                             ) {
-                                console.log(item.key);
                                 ref.child('/rooms/' + item.key).remove(function(error) {
                                     if (error) callback(false);
                                     ref.child('/users/' + user_id + '/friends/').set(data2);
                                     ref.child('/users/' + currentUser.id + '/friends/').set(data1);
+                                    var newKey = ref.child('/users/' + user_id + '/notification/').push().key;
+                                    ref.child('/users/' + user_id + '/notification/' + newKey).set({
+                                        invite_id: newKey,
+                                        to_id: user_id,
+                                        from_id: currentUser.id,
+                                        type: 'Unfriend',
+                                        color_code: currentUser.color_code,
+                                        read: false,
+                                        room_id: item.key,
+                                        message: currentUser.username + ' unfriend you.'
+                                    });
                                     callback(true);
                                 });
                             }
@@ -397,7 +391,7 @@
                     });
                 });
             },
-            $remove: function(noti_id, callback) {
+            remove: function(noti_id, callback) {
                 var currentuser = UserService.getProfile()
                 ref.child('/users/' + currentuser.id + '/notification/' + noti_id).once('value', function(snapshot) {
                     var notiVal = snapshot.val();
@@ -409,8 +403,31 @@
                         });
                     });
                 });
+            },
+            updateStatus: function(noti_id, callback) {
+                var currentuser = UserService.getProfile()
+                ref.child('/users/' + currentuser.id + '/notification/' + noti_id).once('value', function(snapshot) {
+                    var notiVal = snapshot.val();
+                    notiVal.read = true;
+                    ref.child('/users/' + currentuser.id + '/notification/' + noti_id).set(notiVal);
+                    callback(true);
+                });
             }
         };
-    }
+    };
+
+    FirebaseChildEvent.$inject = ["firebase"];
+
+    function FirebaseChildEvent(firebase) {
+        var ref = firebase.database().ref();
+        return {
+            root: function(callback) {
+                ref.child('users').on('child_changed', function(snapshot) {
+                    if (snapshot.val()) callback(true);
+                    else callback(false);
+                });
+            }
+        };
+    };
 
 })();
