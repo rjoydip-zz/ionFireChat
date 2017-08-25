@@ -203,12 +203,19 @@
 
         angular.extend(vm, {
             refresh: refresh,
-            user: null
+            user: null,
+            update: update
         });
 
         $scope.$on('$ionicView.afterEnter', function() {
             getuserDetails();
         });
+
+        function update(user) {
+            UserService.updateProfile(user, function(status) {
+                console.log(status);
+            });
+        };
 
         function getuserDetails() {
             vm.user = null;
@@ -219,7 +226,7 @@
             if (getuserDetails()) {
                 $scope.$broadcast('scroll.refreshComplete');
             }
-        }
+        };
 
         (function() {
             getuserDetails();

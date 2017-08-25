@@ -104,6 +104,7 @@
             logout: logout,
             getUsers: getUsers,
             createUser: createUser,
+            updateProfile: updateProfile,
             saveProfile: saveProfile,
             getProfile: getProfile,
             trackPresence: trackPresence,
@@ -201,6 +202,14 @@
             this.trackPresence();
             localStorage.removeItem('chat.current_user');
             Auth.$signOut();
+        };
+
+        function updateProfile(user, callback) {
+            var currentUser = this.getProfile();
+            ref.child('/users/' + currentUser.id).update(user).then(function() {
+                saveProfile(user);
+                callback(true);
+            });
         };
 
         function saveProfile(user) {
