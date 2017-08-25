@@ -29,17 +29,18 @@
                 <textarea type="text" ng-model="vm.user.bio" row=5></textarea>
             </label>
 
-            <button class="button button-full button-assertive">Update</button>
+            <div class="submit">
+                <button class="button button-assertive">Update</button>
+            </div>
         </div>
         <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
     </ion-content>
 </ion-view>
 
 <style>
-    .btn-update {
-        margin-top: 30px !important;
-        width: 93% !important;
-        margin-left: 15px;
+    .submit {
+        margin-top: 20px;
+        text-align: center;
     }
     
     #profile-bg {
