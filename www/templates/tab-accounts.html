@@ -23,21 +23,24 @@
                 <div class="list" ng-style="{ height: vm.windowHeight + 'px' }">
                     <label class="item item-input item-stacked-label">
                         <span class="input-label">Username</span>
-                        <input type="text" ng-model="vm.user.username"/>
+                        <input type="text" ng-if="!vm.isMyAccount" ng-model="vm.user.username" readonly/>
+                        <input type="text" ng-if="vm.isMyAccount" ng-model="vm.user.username"/>
                     </label>
 
                     <label class="item item-input item-stacked-label">
-                        <span class="input-label">Email</span>
-                        <input type="text" ng-model="vm.user.email" placeholder="" readonly/>
+                        <span class="input-label">Email | {{vm.isMyAccount}}</span>
+                        <input type="text" ng-if="!vm.isMyAccount" ng-model="vm.user.email" placeholder="" readonly/>
+                        <input type="text" ng-if="vm.isMyAccount"  ng-model="vm.user.email" placeholder=""/>
                     </label>
 
                     <label class="item item-input item-stacked-label">
                         <span class="input-label">Bio</span>
-                        <textarea type="text" ng-model="vm.user.bio" row=5></textarea>
+                        <textarea type="text" ng-if="!vm.isMyAccount" ng-model="vm.user.bio" row=5 readonly></textarea>
+                        <textarea type="text" ng-if="vm.isMyAccount" ng-model="vm.user.bio" row=5></textarea>
                     </label>
 
                     <div class="submit">
-                        <button class="button button-assertive" ng-click="vm.update(vm.user)">Update</button>
+                        <button class="button button-assertive" ng-if="vm.isMyAccount" ng-click="vm.update(vm.user)">Update</button>
                     </div>
                 </div>
             </div>

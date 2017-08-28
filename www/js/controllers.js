@@ -227,6 +227,7 @@
             show: true,
             update: update,
             windowHeight: 0,
+            isMyAccount: true,
             showContent: showContent,
             getuserDetails: getuserDetails
         });
@@ -264,9 +265,11 @@
             if ($stateParams.id) {
                 UserService.getUserProfile($stateParams.id, function(user) {
                     vm.user = user;
+                    vm.isMyAccount = false;
                 });
             } else {
                 vm.user = UserService.getProfile();
+                vm.isMyAccount = true;
             }
             return vm.user;
         };
