@@ -15,7 +15,7 @@
  }
  
  .tabs-striped .tabs {
-     background-color: #ef473a;
+     background-color: #ef473a !important;
  }
  
  .tabs-striped .tab-item.tab-item-active,

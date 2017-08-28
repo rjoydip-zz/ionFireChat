@@ -3,55 +3,43 @@
         <user-notification></user-notification>
         <user-logout></user-logout>
     </ion-nav-buttons>
-    <ion-content scroll="false">
+    <ion-content>
         <div id="profile-bg"></div>
         <div id="content">
             <div id="profile-info">
                 <div id="profile-image" ng-style="{'background-color': vm.user.color_code}">
                     <span>{{vm.user.username.charAt(0)}}</span>
                 </div>
-                <div id="profile-name">{{vm.user.username}}</div>
             </div>
         </div>
-        <div class="nextedTab tabs-striped tabs-top tabs-background-stable">
-            <div class="tabs">
-                <a class="tab-item" ng-click="vm.showContent(1)">Page 1</a>
-                <a class="tab-item" ng-click="vm.showContent(2)">Page 2</a>
-            </div>
-            <div class="tab-content" ng-style="{ height: vm.windowHeight }" ng-if="vm.show">
-                About Page 1
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>a
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>b
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br> c
-            </div>
-            <div class="tab-content" ng-style="{ height: vm.windowHeight }" ng-if="!vm.show">
-                About Page 2
+        <div class="list">
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Username</span>
+                <input type="text" ng-model="vm.user.username"/>
+            </label>
+
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Email</span>
+                <input type="text" ng-model="vm.user.email" placeholder="" readonly/>
+            </label>
+
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Bio</span>
+                <textarea type="text" ng-model="vm.user.bio" row=5></textarea>
+            </label>
+
+            <div class="submit">
+                <button class="button button-assertive" ng-click="vm.update(vm.user)">Update</button>
             </div>
         </div>
+        <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
     </ion-content>
 </ion-view>
 
 <style>
-    .btn-update {
-        margin-top: 30px !important;
-        width: 93% !important;
-        margin-left: 15px;
+    .submit {
+        margin-top: 20px;
+        text-align: center;
     }
     
     #profile-bg {
@@ -88,13 +76,6 @@
         text-align: center;
     }
     
-    #profile-name {
-        color: #e42112;
-        padding: 18px;
-        font-weight: 400;
-        font-size: 30px;
-    }
-    
     #profile-description {
         color: #888;
     }
@@ -109,14 +90,14 @@
         width: 128px;
         height: 128px;
         margin: 30px auto 0;
-        border: 2px solid #3eca39;
+        border: 3px solid #3eca39;
     }
     
     #profile-image span {
         font-size: 60px;
         position: absolute;
         left: 44%;
-        top: 35%;
+        top: 50%;
         color: #ffffff;
     }
     
@@ -154,27 +135,5 @@
         right: 5px;
         bottom: 5px;
         color: #888;
-    }
-    
-    .nextedTab .tabs {
-        top: 36%;
-        color: #fff;
-        background-color: #ef473a !important;
-    }
-    
-    .tab-content {
-        margin-top: 10%;
-        width: 100%;
-        padding: 6% 2%;
-        overflow-y: scroll;
-    }
-    
-    .tab-item {
-        max-width: 100%;
-    }
-    
-    .tabs-striped .tab-item.activated {
-        font-size: 1.3em;
-        border-color: #fff;
     }
 </style>

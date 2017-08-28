@@ -120,6 +120,10 @@
             currentUser: null
         });
 
+        $scope.$on('$ionicView.loaded', function(event, viewData) {
+            vm.refresh();
+        });
+
         function getUsers(callback) {
             vm.users = [];
             vm.currentUser = UserService.getProfile();
@@ -159,7 +163,6 @@
 
         FirebaseChildEvent.root(function(status) {
             console.log("Firebase reference update status -> " + status + " from users controller");
-            vm.refresh();
         });
 
         console.log("Users controller loading...");
@@ -221,13 +224,28 @@
         angular.extend(vm, {
             refresh: refresh,
             user: null,
+            show: true,
             update: update,
+            windowHeight: 0,
+            showContent: showContent,
             getuserDetails: getuserDetails
         });
 
         $scope.$on('$ionicView.afterEnter', function() {
             vm.getuserDetails();
+            vm.windowHeight = Math.floor((window.innerHeight / 2) + 25) + 'px';
         });
+
+        var preType = 0;
+
+        function showContent(type) {
+            if (preType > 0 && preType === type) {
+                return;
+            } else {
+                vm.show = !vm.show;
+                preType = type;
+            }
+        };
 
         function update(user) {
             UserService.updateProfile(user, function(status) {
