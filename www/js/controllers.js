@@ -269,28 +269,33 @@
         // back button enable on this page
         $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
             viewData.enableBack = true;
+            vm.windowHeight = Math.floor((window.innerHeight / 2) + 25) + 'px';
         });
 
         angular.extend(vm, {
             user: null,
-            refresh: refresh
+            show: true,
+            windowHeight: 0,
+            showContent: showContent
         });
+
+        var preType = 0;
+
+        function showContent(type) {
+            if (preType > 0 && preType === type) {
+                return;
+            } else {
+                vm.show = !vm.show;
+                preType = type;
+            }
+        };
 
         function getProfileData() {
             vm.user = null;
             UserService.getUserProfile($state.params.id, function(userData) {
                 vm.user = userData;
-                $scope.$apply();
             });
             return this;
-        };
-
-        function refresh() {
-            if (getProfileData()) {
-                $scope.$broadcast('scroll.refreshComplete');
-            } else {
-                $scope.$broadcast('scroll.refreshComplete');
-            }
         };
 
         (function() {
@@ -300,6 +305,7 @@
         FirebaseChildEvent.root(function(status) {
             console.log("Firebase reference update status -> " + status + " from profile controller");
             getProfileData();
+            $scope.$apply();
         });
 
         console.log("Profile controller loading...");

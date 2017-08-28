@@ -3,7 +3,7 @@
         <user-notification></user-notification>
         <user-logout></user-logout>
     </ion-nav-buttons>
-    <ion-content>
+    <ion-content scroll="false">
         <div id="profile-bg"></div>
         <div id="content">
             <div id="profile-info">
@@ -13,7 +13,37 @@
                 <div id="profile-name">{{vm.user.username}}</div>
             </div>
         </div>
-        <ion-refresher on-refresh="vm.refresh()"></ion-refresher>
+        <div class="nextedTab tabs-striped tabs-top tabs-background-stable">
+            <div class="tabs">
+                <a class="tab-item" ng-click="vm.showContent(1)">Page 1</a>
+                <a class="tab-item" ng-click="vm.showContent(2)">Page 2</a>
+            </div>
+            <div class="tab-content" ng-style="{ height: vm.windowHeight }" ng-if="vm.show">
+                About Page 1
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>a
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>b
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br> c
+            </div>
+            <div class="tab-content" ng-style="{ height: vm.windowHeight }" ng-if="!vm.show">
+                About Page 2
+            </div>
+        </div>
     </ion-content>
 </ion-view>
 
@@ -124,5 +154,27 @@
         right: 5px;
         bottom: 5px;
         color: #888;
+    }
+    
+    .nextedTab .tabs {
+        top: 36%;
+        color: #fff;
+        background-color: #ef473a !important;
+    }
+    
+    .tab-content {
+        margin-top: 10%;
+        width: 100%;
+        /*background: #ccc;*/
+        padding: 6% 2%;
+        overflow-y: scroll;
+    }
+    
+    .tab-item {
+        max-width: 100%;
+    }
+    
+    .tabs-striped .tab-item.activated {
+        border-color: #fff;
     }
 </style>

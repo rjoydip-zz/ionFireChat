@@ -4,7 +4,6 @@
     angular
         .module('directives', [])
         .directive('userLogout', userLogout)
-        .directive('parseStyle', parseStyle)
         .directive('userNotification', userNotification);
 
     userLogout.$inject = ["UserService"];
@@ -73,20 +72,6 @@
                 // console.log("Notification directive working");
             }
         }
-    }
-
-    parseStyle.$inject = ["$interpolate"];
-
-    function parseStyle($interpolate) {
-        return function(scope, elem) {
-            var exp = $interpolate(elem.html()),
-                watchFunc = function() { return exp(scope); }
-
-            scope.$watch(watchFunc, function(html) {
-                elem.html(html);
-            });
-        };
     };
-
 
 })();
