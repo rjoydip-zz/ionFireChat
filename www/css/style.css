@@ -14,6 +14,16 @@
      width: 96%;
  }
  
+ .tabs-striped .tabs {
+     background-color: #ef473a;
+ }
+ 
+ .tabs-striped .tab-item.tab-item-active,
+ .tabs-striped .tab-item.active,
+ .tabs-striped .tab-item.activated {
+     margin-top: 1px;
+ }
+ 
  .nodatatxt {
      position: absolute;
      top: 50%;
@@ -30,6 +40,7 @@
      padding: 4px 8px 3px 6px;
      border-bottom: 2px solid #ccc;
  }
+ /* For chat */
  
  .chat-content {
      padding: 20px 10px 0;

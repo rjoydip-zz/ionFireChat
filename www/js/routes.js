@@ -72,12 +72,8 @@ angular.module('routes', [])
 
     .state('profile', {
         url: '/profile/:id',
-        templateUrl: 'templates/profile/profile.html',
+        templateUrl: 'templates/profile.html',
         controller: 'ProfileCtrl as vm'
-    })
-
-    .state('tab.profile', {
-        url: '/profile/:id',
     })
 
     .state('notification', {
