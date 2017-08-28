@@ -96,7 +96,7 @@
         }
 
         function openProfile(user) {
-            $state.go('profile', { id: user.id });
+            $state.go('tab.accounts', { id: user.id });
         };
 
         (function() {
@@ -158,7 +158,7 @@
         };
 
         function openProfile(user) {
-            $state.go('profile', { id: user.id });
+            $state.go('tab.accounts', { id: user.id });
         };
 
         FirebaseChildEvent.root(function(status) {
@@ -216,9 +216,9 @@
         console.log("Chat controller loading...");
     }
 
-    AccountsCtrl.$inject = ['$scope', "$state", "$rootScope", "UserService", "FirebaseChildEvent"];
+    AccountsCtrl.$inject = ['$scope', "$state", "$stateParams", "$rootScope", "UserService", "FirebaseChildEvent"];
 
-    function AccountsCtrl($scope, $state, $rootScope, UserService, FirebaseChildEvent) {
+    function AccountsCtrl($scope, $state, $stateParams, $rootScope, UserService, FirebaseChildEvent) {
         var vm = this;
 
         angular.extend(vm, {
@@ -234,6 +234,12 @@
         $scope.$on('$ionicView.afterEnter', function() {
             vm.getuserDetails();
             vm.windowHeight = Math.floor((window.innerHeight / 2) + 20);
+        });
+
+        $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+            if (toState !== fromState) {
+                $stateParams.id = null;
+            }
         });
 
         var preType = 0;
@@ -255,7 +261,13 @@
 
         function getuserDetails() {
             vm.user = null;
-            vm.user = UserService.getProfile();
+            if ($stateParams.id) {
+                UserService.getUserProfile($stateParams.id, function(user) {
+                    vm.user = user;
+                });
+            } else {
+                vm.user = UserService.getProfile();
+            }
             return vm.user;
         };
 
@@ -273,7 +285,6 @@
             console.log("Firebase reference update status -> " + status + " from settings controller");
             vm.user = status;
             $scope.$apply();
-            console.log(status);
         });
 
         console.log("Settings controller loading...");

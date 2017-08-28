@@ -41,8 +41,8 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-content" ng-style="{ height: vm.windowHeight }" ng-if="!vm.show">
-                About Page 2
+            <div class="tab-content nodatatxt" ng-style="{ height: vm.windowHeight }" ng-if="!vm.show">
+                No activity found
             </div>
         </div>
     </ion-content>
@@ -224,5 +224,10 @@
     .submit {
         margin-top: 2%;
         text-align: center;
+    }
+    
+    .nodatatxt {
+        top: 100%;
+        height: 100%;
     }
 </style>

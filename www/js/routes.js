@@ -56,6 +56,9 @@ angular.module('routes', [])
 
     .state('tab.accounts', {
         url: '/accounts',
+        params: {
+            id: null
+        },
         views: {
             'tab-accounts': {
                 templateUrl: 'templates/tab-accounts.html',
@@ -68,12 +71,6 @@ angular.module('routes', [])
         url: '/chat/:id',
         templateUrl: 'templates/chat.html',
         controller: 'ChatCtrl as vm'
-    })
-
-    .state('profile', {
-        url: '/profile/:id',
-        templateUrl: 'templates/profile.html',
-        controller: 'ProfileCtrl as vm'
     })
 
     .state('notification', {
