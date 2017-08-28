@@ -5,22 +5,22 @@
     </ion-nav-buttons>
     <ion-content scroll="false">
         <div id="profile-bg"></div>
+        <div class="nextedTab tabs-striped tabs-top tabs-background-stable">
+            <div class="tabs">
+                <a class="tab-item" ng-class="{'select-tab': vm.show}" ng-click="vm.showContent(1)">Settings</a>
+                <a class="tab-item" ng-class="{'select-tab': !vm.show}" ng-click="vm.showContent(2)">Activity</a>
+            </div>
+        </div>
         <div id="content">
             <div id="profile-info">
                 <div id="profile-image" ng-style="{'background-color': vm.user.color_code}">
-                    <span>{{vm.user.username.charAt(0)}}</span>
+                    <div>{{vm.user.username.charAt(0)}}</div>
                 </div>
-                <div id="profile-name">{{vm.user.username}}</div>
-            </div>
-        </div>
-        <div class="nextedTab tabs-striped tabs-top tabs-background-stable">
-            <div class="tabs">
-                <a class="tab-item" ng-click="vm.showContent(1)">Settings</a>
-                <a class="tab-item" ng-click="vm.showContent(2)">Activity</a>
+                <!--<div id="profile-name">{{vm.user.username}}</div>-->
             </div>
 
-            <div class="tab-content" scroll="true" ng-style="{ height: vm.windowHeight }" ng-if="vm.show">
-                <div class="list">
+            <div class="tab-content" scroll="true" ng-style="{ height: (vm.windowHeight) - 15 + 'px' }" ng-if="vm.show">
+                <div class="list" ng-style="{ height: vm.windowHeight + 'px' }">
                     <label class="item item-input item-stacked-label">
                         <span class="input-label">Username</span>
                         <input type="text" ng-model="vm.user.username"/>
@@ -59,7 +59,7 @@
         position: fixed;
         left: 0;
         z-index: 2;
-        top: -100px;
+        top: -3px;
         width: 100%;
         height: 250px;
         background: #ef473a;
@@ -76,9 +76,9 @@
     
     #content {
         position: relative;
-        margin-top: 100px;
+        margin-top: 40%;
         background-color: white;
-        padding-top: 130px;
+        padding-top: 70px;
     }
     
     #profile-info {
@@ -113,12 +113,11 @@
         border: 2px solid #3eca39;
     }
     
-    #profile-image span {
-        font-size: 60px;
-        position: absolute;
-        left: 44%;
-        top: 35%;
-        color: #ffffff;
+    #profile-image div {
+        text-align: center;
+        font-size: 70px;
+        color: #fff;
+        margin-top: 35%;
     }
     
     .list-item-content {
@@ -158,15 +157,16 @@
     }
     
     .nextedTab .tabs {
-        top: 40%;
+        top: 0;
         color: #fff;
         background-color: #ef473a !important;
     }
     
     .tab-content {
-        margin-top: 28px;
-        padding: 6% 2%;
+        /*margin-top: 10%;
+        padding: 10% 2%;*/
         overflow-y: scroll;
+        overflow-x: hidden;
     }
     
     .tab-item {
@@ -174,7 +174,6 @@
     }
     
     .tabs-striped .tab-item.activated {
-        font-size: 1.3em;
         border-color: #fff;
     }
     
@@ -212,5 +211,18 @@
         right: 5px;
         bottom: 5px;
         color: #888;
+    }
+    
+    .select-tab {
+        /*font-size: 1.2em;*/
+        color: #ffffff;
+        opacity: 1;
+        font-weight: 500;
+        border-bottom: 2px solid #fff;
+    }
+    
+    .submit {
+        margin-top: 2%;
+        text-align: center;
     }
 </style>

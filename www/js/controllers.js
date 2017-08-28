@@ -233,7 +233,7 @@
 
         $scope.$on('$ionicView.afterEnter', function() {
             vm.getuserDetails();
-            vm.windowHeight = Math.floor((window.innerHeight / 2) + 25) + 'px';
+            vm.windowHeight = Math.floor((window.innerHeight / 2) + 20);
         });
 
         var preType = 0;
