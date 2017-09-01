@@ -28,7 +28,7 @@
                     </label>
 
                     <label class="item item-input item-stacked-label">
-                        <span class="input-label">Email | {{vm.isMyAccount}}</span>
+                        <span class="input-label">Email</span>
                         <input type="text" ng-if="!vm.isMyAccount" ng-model="vm.user.email" placeholder="" readonly/>
                         <input type="text" ng-if="vm.isMyAccount"  ng-model="vm.user.email" placeholder=""/>
                     </label>
@@ -217,7 +217,6 @@
     }
     
     .select-tab {
-        /*font-size: 1.2em;*/
         color: #ffffff;
         opacity: 1;
         font-weight: 500;
