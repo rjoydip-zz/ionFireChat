@@ -7,7 +7,7 @@ angular.module('routes', [])
         .state('login', {
             url: "/login",
             templateUrl: "templates/login.html",
-            controller: 'LoginCtrl as vm',
+            controller: 'LoginController as vm',
             resolve: {
                 requireNoAuth: function($state, Auth) {
                     return Auth.$requireSignIn().then(function(auth) {
@@ -39,7 +39,7 @@ angular.module('routes', [])
         views: {
             'tab-users': {
                 templateUrl: 'templates/tab-users.html',
-                controller: 'UsersCtrl as vm'
+                controller: 'UsersController as vm'
             }
         }
     })
@@ -49,7 +49,7 @@ angular.module('routes', [])
         views: {
             'tab-friends': {
                 templateUrl: 'templates/tab-friends.html',
-                controller: 'FriendsCtrl as vm'
+                controller: 'FriendsController as vm'
             }
         }
     })
@@ -62,7 +62,7 @@ angular.module('routes', [])
         views: {
             'tab-accounts': {
                 templateUrl: 'templates/tab-accounts.html',
-                controller: 'AccountsCtrl as vm'
+                controller: 'AccountsController as vm'
             }
         }
     })
@@ -70,13 +70,13 @@ angular.module('routes', [])
     .state('chat', {
         url: '/chat/:id',
         templateUrl: 'templates/chat.html',
-        controller: 'ChatCtrl as vm'
+        controller: 'ChatController as vm'
     })
 
     .state('notification', {
         url: '/notification',
         templateUrl: 'templates/notification.html',
-        controller: 'NotificationCtrl as vm',
+        controller: 'NotificationController as vm',
     })
 
     $urlRouterProvider.otherwise('/login');

@@ -3,17 +3,17 @@
 
     angular
         .module('controllers', [])
-        .controller("ChatCtrl", ChatCtrl)
-        .controller("LoginCtrl", LoginCtrl)
-        .controller("UsersCtrl", UsersCtrl)
-        .controller("FriendsCtrl", FriendsCtrl)
-        .controller("AccountsCtrl", AccountsCtrl)
-        .controller("ProfileCtrl", ProfileCtrl)
-        .controller("NotificationCtrl", NotificationCtrl);
+        .controller("ChatController", ChatController)
+        .controller("LoginController", LoginController)
+        .controller("UsersController", UsersController)
+        .controller("FriendsController", FriendsController)
+        .controller("AccountsController", AccountsController)
+        .controller("ProfileController", ProfileController)
+        .controller("NotificationController", NotificationController);
 
-    LoginCtrl.$inject = ["$scope", "$ionicModal", "$state", "$firebaseAuth", "$ionicLoading", "$rootScope", "CONFIG", "UserService"];
+    LoginController.$inject = ["$scope", "$ionicModal", "$state", "$firebaseAuth", "$ionicLoading", "$rootScope", "CONFIG", "UserService"];
 
-    function LoginCtrl($scope, $ionicModal, $state, $firebaseAuth, $ionicLoading, $rootScope, CONFIG, UserService) {
+    function LoginController($scope, $ionicModal, $state, $firebaseAuth, $ionicLoading, $rootScope, CONFIG, UserService) {
 
         var vm = this;
         var ref = firebase.database().ref();
@@ -46,9 +46,9 @@
         console.log("Login controller loading...");
     }
 
-    FriendsCtrl.$inject = ['$scope', "$timeout", "$state", "$rootScope", "UserService"];
+    FriendsController.$inject = ['$scope', "$timeout", "$state", "$rootScope", "UserService"];
 
-    function FriendsCtrl($scope, $timeout, $state, $rootScope, UserService) {
+    function FriendsController($scope, $timeout, $state, $rootScope, UserService) {
         var vm = this;
 
         angular.extend(vm, {
@@ -106,9 +106,9 @@
         console.log("Friends controller loading...");
     }
 
-    UsersCtrl.$inject = ['$scope', "$state", "$timeout", "$rootScope", "UserService", "Rooms", "Invite", "FirebaseChildEvent"];
+    UsersController.$inject = ['$scope', "$state", "$timeout", "$rootScope", "UserService", "Rooms", "Invite", "FirebaseChildEvent"];
 
-    function UsersCtrl($scope, $state, $timeout, $rootScope, UserService, Rooms, Invite, FirebaseChildEvent) {
+    function UsersController($scope, $state, $timeout, $rootScope, UserService, Rooms, Invite, FirebaseChildEvent) {
         var vm = this;
 
         angular.extend(vm, {
@@ -168,9 +168,9 @@
         console.log("Users controller loading...");
     };
 
-    ChatCtrl.$inject = ['$scope', '$state', '$ionicScrollDelegate', '$rootScope', 'Message', "UserService", "Rooms", "FirebaseChildEvent"];
+    ChatController.$inject = ['$scope', '$state', '$ionicScrollDelegate', '$rootScope', 'Message', "UserService", "Rooms", "FirebaseChildEvent"];
 
-    function ChatCtrl($scope, $state, $ionicScrollDelegate, $rootScope, Message, UserService, Rooms, FirebaseChildEvent) {
+    function ChatController($scope, $state, $ionicScrollDelegate, $rootScope, Message, UserService, Rooms, FirebaseChildEvent) {
         var vm = this;
         var $roomId = null;
 
@@ -216,9 +216,9 @@
         console.log("Chat controller loading...");
     }
 
-    AccountsCtrl.$inject = ['$scope', "$state", "$stateParams", "$rootScope", "UserService", "FirebaseChildEvent"];
+    AccountsController.$inject = ['$scope', "$state", "$stateParams", "$rootScope", "UserService", "FirebaseChildEvent"];
 
-    function AccountsCtrl($scope, $state, $stateParams, $rootScope, UserService, FirebaseChildEvent) {
+    function AccountsController($scope, $state, $stateParams, $rootScope, UserService, FirebaseChildEvent) {
         var vm = this;
 
         angular.extend(vm, {
@@ -293,9 +293,9 @@
         console.log("Settings controller loading...");
     }
 
-    ProfileCtrl.$inject = ['$scope', "$state", "$rootScope", "UserService", "FirebaseChildEvent"];
+    ProfileController.$inject = ['$scope', "$state", "$rootScope", "UserService", "FirebaseChildEvent"];
 
-    function ProfileCtrl($scope, $state, $rootScope, UserService, FirebaseChildEvent) {
+    function ProfileController($scope, $state, $rootScope, UserService, FirebaseChildEvent) {
         var vm = this;
 
         // back button enable on this page
@@ -343,9 +343,9 @@
         console.log("Profile controller loading...");
     }
 
-    NotificationCtrl.$inject = ['$scope', "$state", "$rootScope", "UserService", "Invite", "FirebaseChildEvent"];
+    NotificationController.$inject = ['$scope', "$state", "$rootScope", "UserService", "Invite", "FirebaseChildEvent"];
 
-    function NotificationCtrl($scope, $state, $rootScope, UserService, Invite, FirebaseChildEvent) {
+    function NotificationController($scope, $state, $rootScope, UserService, Invite, FirebaseChildEvent) {
         var vm = this;
 
         // back button enable on this page
