@@ -20,6 +20,3 @@ bower install angularfire --save
 bower install angular-md5 --save  // md5 for Angular.js and Gravatar filter
 ```
 
-### Issue
-  - Signup modal closing earlier.
-
